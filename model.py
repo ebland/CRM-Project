@@ -29,7 +29,26 @@ class Customer(db.Model):
     city = db.Column(db.String(100))
     state = db.Column(db.String(20))
     zip_code = db.Column(db.String(20))
-    is_subscribed = db.Column(db.Enum('T', 'F'))
+
+
+class Role_ID(db.Model, Roles):
+    """Role ID table."""
+
+    __tablename__ ="roles"
+
+    id = db.Column(db.Integer(), 
+                      primary_key=True,
+                      unique=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+
+#Ask Leslie if going to separate here by id # or if just need to redirect to 
+#  separate html with different options via jinja/html
+    # class User_Roles(db.Model):
+
+    # db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    # db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
 
 
 class Invoice(db.Model):
@@ -41,7 +60,7 @@ class Invoice(db.Model):
                       autoincrement=True)
     invoice_number = db.Column(db.Unicode(50), primary_key=True, unique=True)
     received_date = db.Column(db.Date, default=datetime.today())
-    product = db.relationship('InvoiceDetail', back_populates="invoice")
+    product = db.relationship('Invoice_Detail', back_populates="invoice")
 
 
 class Product(db.Model):
@@ -56,7 +75,7 @@ class Product(db.Model):
     product_type = db.Column(db.Unicode(100))
     price = db.Column(db.DECIMAL(10, 2))
     image_url = db.Column(db.Unicode(500))
-    invoices = db.relationship('InvoiceDetail', back_populates='product')
+    invoices = db.relationship('Invoice_Detail', back_populates='product')
 
     @classmethod
     def get_or_create(
@@ -75,15 +94,15 @@ class Product(db.Model):
         return product
 
     @property
-    def available_invoices(self):
+    def current_invoices(self):
         return [
-            i for i in self.invoices if i.status in (
+            i for i in self.invoice if i.status in (
                 'New', 'In Stock'
             )
         ]
 
 
-class InvoiceDetail(db.Model):
+class Invoice_Detail(db.Model):
 
      __tablename__ ="invoice_detail"
 
@@ -100,26 +119,11 @@ class InvoiceDetail(db.Model):
         ),
         default=u'New'
     )
-    in_stock = db.Column(db.Boolean, default=False)
-    in_stock_date = db.Column(db.Date, nullable=True)
-    product = db.relationship('Product', back_populates='invoices')
+    in_stock = db.Column(db.Boolean, default=False) #to be able to add to invoice
+    in_stock_date = db.Column(db.Date, nullable=True) #when available if out of stock
     invoice = db.relationship('Invoice', back_populates='products')
-
-
-class Role(db.Model, Role):
-    id = db.Column(db.Integer(), 
-                      primary_key=True,
-                      unique=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
-
-    class RolesUsers(db.Model):
-
-     __tablename__ ="role_users"
-
-    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
-
+    product = db.relationship('Product', back_populates='invoices')
+    
 
 class User(db.Model, User):
 
@@ -135,9 +139,9 @@ class User(db.Model, User):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     job_title = db.Column(db.String(100), nullable=False)
-    department = db.Column(db.String(50))
+    department = db.Column(db.String(50)) # if staff
     start_date = db.Column(db.Date(), nullable=False)
-    birth_date = db.Column(db.Date())
+    birth_date = db.Column(db.Date()) # if staff
     phone = db.Column(db.String(30))
     phone2 = db.Column(db.String(30))
 
@@ -149,33 +153,35 @@ class User(db.Model, User):
 
     # Account status
     active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Role', secondary=roles_users
+    created_at = db.Column(db.DateTime())
+    role_id = db.relationship('Role_users', secondary=roles_users #assign role id
 
-class Client(db.Model, User):
+# Leaving this as a placeholder in case I have to do separate for permissions!!
 
-     __tablename__ ="client"
+# class TBD(db.Model, User):
 
-    id = db.Column(db.String(255), 
-                      primary_key=True, 
-                      unique=True)
-    email = db.Column(db.String(255))
-    password = db.Column(db.String(255))
+#      __tablename__ ="client"
 
-    # Client Information
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    added_date = db.Column(db.Date())
-    phone = db.Column(db.String(30))
-    phone2 = db.Column(db.String(30))
+#     id = db.Column(db.String(255), 
+#                       primary_key=True, 
+#                       unique=True)
+#     email = db.Column(db.String(255))
+#     password = db.Column(db.String(255))
 
-    # Address
-    address1 = db.Column(db.String(255))
-    address2 = db.Column(db.String(255))
-    city = db.Column(db.String(100))
-    state = db.Column(db.String(20))
-    zip_code = db.Column(db.String(20))
-    is_subscribed = db.Column(db.Enum('T', 'F'))
+#     # TBD Information
+#     first_name = db.Column(db.String(50))
+#     last_name = db.Column(db.String(50))
+#     added_date = db.Column(db.Date())
+#     phone = db.Column(db.String(30))
+#     phone2 = db.Column(db.String(30))
+
+#     # Address
+#     address1 = db.Column(db.String(255))
+#     address2 = db.Column(db.String(255))
+#     city = db.Column(db.String(100))
+#     state = db.Column(db.String(20))
+#     zip_code = db.Column(db.String(20))
+
 
 def connect_to_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///customersappdb'
