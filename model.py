@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
+import datetime
 db = SQLAlchemy()
 
 class Customer(db.Model):
@@ -31,12 +31,12 @@ class Customer(db.Model):
     zip_code = db.Column(db.String(20))
 
 
-class Role_ID(db.Model, Roles):
+class Role_ID(db.Model):
     """Role ID table."""
 
     __tablename__ ="roles"
 
-    id = db.Column(db.Integer(), 
+    role_id = db.Column(db.Integer(), 
                       primary_key=True,
                       unique=True)
     name = db.Column(db.String(80), unique=True)
@@ -45,10 +45,15 @@ class Role_ID(db.Model, Roles):
 
 #Ask Leslie if going to separate here by id # or if just need to redirect to 
 #  separate html with different options via jinja/html
-    # class User_Roles(db.Model):
+class User_Roles(db.Model):
 
-    # db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-    # db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
+    __tablename__="user_roles"
+
+    user_role_id = db.Column(db.Integer(), 
+                      primary_key=True,
+                      unique=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.user_id'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.role_id'))
 
 
 class Invoice(db.Model):
@@ -59,7 +64,7 @@ class Invoice(db.Model):
                       primary_key=True,
                       autoincrement=True)
     invoice_number = db.Column(db.Unicode(50), primary_key=True, unique=True)
-    received_date = db.Column(db.Date, default=datetime.today())
+    received_date = db.Column(db.Date, default=datetime.datetime.today())
     product = db.relationship('Invoice_Detail', back_populates="invoice")
 
 
@@ -77,38 +82,36 @@ class Product(db.Model):
     image_url = db.Column(db.Unicode(500))
     invoices = db.relationship('Invoice_Detail', back_populates='product')
 
-    @classmethod
-    def get_or_create(
-        cls, product_number, session,
-        description=None, product_type='Other', price=None,
-    ):
-        product = cls.query.get(product_number)
-        if not product:
-            product = cls(
-                product_number=product_number,
-                description=description,
-                product_type=product_type,
-                price=price,
-            )
-            session.add(product)
-        return product
+    # @classmethod
+    # def get_or_create(
+    #     cls, product_number, session,
+    #     description=None, product_type='Other', price=None,
+    # ):
+    #     product = cls.query.get(product_number)
+    #     if not product:
+    #         product = cls(
+    #             product_number=product_number,
+    #             description=description,
+    #             product_type=product_type,
+    #             price=price,
+    #         )
+    #         session.add(product)
+    #     return product
 
-    @property
-    def current_invoices(self):
-        return [
-            i for i in self.invoice if i.status in (
-                'New', 'In Stock'
-            )
-        ]
+    # @property
+    # def current_invoices(self):
+    #     return [
+    #         i for i in self.invoice if i.status in (
+    #             'New', 'In Stock'
+    #         )
+        #]
 
 
 class Invoice_Detail(db.Model):
 
-     __tablename__ ="invoice_detail"
+    __tablename__ ="invoice_detail"
 
-    id = db.Column(db.Integer,
-                      primary_key=True, 
-                      unique=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     invoice_number = db.Column(db.Unicode(50), db.ForeignKey('invoice.invoice_number'))
     product_number = db.Column(db.Unicode(50), db.ForeignKey('product.product_number'))
     purchase_order_number = db.Column(db.Unicode(50))
@@ -125,13 +128,11 @@ class Invoice_Detail(db.Model):
     product = db.relationship('Product', back_populates='invoices')
     
 
-class User(db.Model, User):
+class User(db.Model):
 
-     __tablename__ ="user"
+    __tablename__ ="user"
 
-    id = db.Column(db.Integer, 
-                      primary_key=True,
-                      unique=True)
+    user_id = db.Column(db.Integer, primary_key=True, unique=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
 
@@ -154,7 +155,7 @@ class User(db.Model, User):
     # Account status
     active = db.Column(db.Boolean())
     created_at = db.Column(db.DateTime())
-    role_id = db.relationship('Role_users', secondary=roles_users #assign role id
+    roles = db.relationship('Role_ID', secondary='user_roles') #assign role id
 
 # Leaving this as a placeholder in case I have to do separate for permissions!!
 
