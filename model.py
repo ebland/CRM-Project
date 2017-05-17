@@ -3,8 +3,10 @@ import datetime
 from datetime import datetime
 from sqlalchemy.orm import relationship, backref
 from flask_debugtoolbar import DebugToolbarExtension
-
+from flask import Flask
 db = SQLAlchemy()
+app = Flask(__name__)
+
 
 class Customer(db.Model):
     """Customers table"""
@@ -122,6 +124,7 @@ class User(db.Model):
 def __repr__(self):
         return '<User %r>' % (self.lname, self.fname)
 
+
 class Product(db.Model):
 
     __tablename__ ="product"
@@ -157,6 +160,7 @@ class Quote(db.Model):
     users = db.relationship('User', backref=db.backref('user_id'))
     invoices = db.relationship('Invoice_Detail', back_populates='product')
     customer = db.relationship('Customer', backref=db.backref('quotes'))
+
 
 class Invoice(db.Model):
 
@@ -194,89 +198,11 @@ class Invoice_Detail(db.Model):
     product = db.relationship('product', back_populates='invoices')
 
 
-#do I need to put this somewhere else to create the invoice total
-app.jinja_env.globals.update(Create_Invoice=Create_Invoice)
-
-@app.route('/Create_Invoice/', methods = ['GET', 'POST'])
-def create_invoice():
-    task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
-
-    if (task == 'n'):
-        product_list = []
-        quantity = []
-        product_price = []
-    
-    while True:
-        product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
-                         "to quit: ")
-        if (product_number == 'q'):
-            print("\nQuitting ...\n")
-            break
-        if (len(product_number) != 8): 
-            print("\nInvalid product number, please try again.")
-        else:
-            with open("product_list.txt") as products:
-                for line in products:
-                    if product_number in line:
-                        single_product = line.split(" ")
-                        quantity = input("\nQuantity of the product " +
-                                         "to be purchased: ")
-                        code = single_product[0]
-                        product_name = single_product[1]
-                        price = float(single_product[2])
-                        total = (price) * int(quantity)
-                        product_list.append(product_name)
-                        quantity.append(quantity)
-                        product_price.append(total)
-                        break
-    print ("Your invoice: ")
-    for i in range(len(product_list)):
-        print '\single_product', quantity[i], product_list[i],' for the ' +
-              'amount of $', product_price[i]
-    print "Your total: $ ", sum(product_price)                    
-    if (task == "q"):
-        sys.exit()
-
-            db.session.add(invoice)
-            db.session.commit()
-            return redirect(url_for('show_invoice'))
-
-    return render_template("create_invoice.html", title = gettext('create_invoice'), form = form)
-
-@app.route('/invoice/confirm/<int:invoice_id>')
-def confirm_invoice(invoice_id):
-    invoice = Invoice.query.filter(Invoice.id==invoice_id).first()
-    invoice.confirm = datetime.datetime.now()
-    db.session.commit()
-    return redirect(url_for('show_invoice', invoice_id=invoice.id))
-
-
-@app.route('/invoice/paid/<int:invoice_id>')
-def invoice_paid(invoice_id):
-    invoice = Invoice.query.filter(invoice_number==invoice_id).first()
-    invoice_paid = datetime.datetime.now()
-    db.session.commit()
-    return redirect(url_for('show_invoice', invoice_id=invoice_number))
-
-
-@app.route('/invoice/delete/<int:invoice_id>')
-def invoice_delete(invoice_id):
-    invoice = Invoice.query.filter(Invoice_number==invoice_id).first()
-    db.session.delete(invoice)
-    db.session.commit()
-    flash(gettext(u"Delete Succesfully!"))
-    return redirect(url_for('all_invoices'))
-
-
 def connect_to_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///ecrm'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
-
-
-# make example data function
-# create a customer - e.g. new_c = Customer(name = "Bob", ...)
 
 
 if __name__ == "__main__":

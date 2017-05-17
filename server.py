@@ -6,11 +6,16 @@ from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for
 from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User 
+from flask_debugtoolbar import DebugToolbarExtension
+
 
 app = Flask(__name__)
-app.jinja_env.undefined = StrictUndefined
+#app.jinja_env.undefined = StrictUndefined
 app.secret_key = "ABC"
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'), 404
 
 @app.route('/')
 def index():
@@ -68,7 +73,7 @@ def dashboard():
     user_id = session.get('user_id')
     user = User.query.filter_by(user_id=user_id).first()
     role = user.roles.name
-    # if the role is admin
+# if the role is admin
     #   find show quotes, customers, jobs
     #   show admin dashboard, passing in data
     # if the role is customer
@@ -80,18 +85,19 @@ def dashboard():
 #     return render_template('templates/dashboard.html', page=page)
 
 
-@app.route('/add_customer')
+@app.route('/add_customer', methods=["GET", "POST"])
 def add_customer():
     """Display Add Customer Form"""
     
     return render_template("templates/create_new_user.html")
 
 
-@app.route('/process_add_customer')
+@app.route('/process_add_customer', methods=["GET", "POST"])
 def add_customer_to_db():
     """Add customer to DB."""
-    f_name = request.args.get('fname')
-    l_name = request.args.get('lname')
+    page = 'create_new_user'
+    fname = request.args.get('fname')
+    lname = request.args.get('lname')
     zip_code = request.args.get('zipcode')
     email = request.args.get('email')
     created_date = datetime.datetime.strptime(
@@ -105,11 +111,13 @@ def add_customer_to_db():
     address12= request.args.get('address2')
     city = request.args.get('city')
     state = request.args.get('state')
+    company = request.args.get('company')
   
 
-    customer = Customer(fname=f_name, lname=l_name, zipcode=zip_code, email=email,
+    customer = Customer(fname=fname, lname=lname, zipcode=zip_code, email=email,
                         password=password, phone=phone, phone2=phone2, 
-                        address1=address1, address2=address2, city=city, state=state)
+                        address1=address1, address2=address2, city=city, state=state,
+                        company=company)
    
     db.session.add(customer)
    
@@ -118,17 +126,17 @@ def add_customer_to_db():
     flash("Customer was addded successfully!!!")
 
     return redirect(url_for('/')) #DASHBOARD??????
+    
+    return render_template('templates/create_new_user.html', page=page)
 
-    else:
-        return render_template('templates/create_new_user.html', page=page)
-
-@app.route('/create_new_user/', methods=["GET", "POST"])
+@app.route('/templates/create_new_user/', methods=["GET", "POST"])
 def new_user():
-    page = 'All Users'
+    page = 'create_new_user'
     if request.method == "POST":
-        f_name = request.form['first_name']
-        l_name = request.form['last_name']
+        firstname = request.form['first_name']
+        lastname = request.form['last_name']
         f_name = request.args.get('fname')
+        l_name = request.args.get('lname')
         zip_code = request.args.get('zipcode')
         email = request.args.get('email')
         created_date = datetime.datetime.strptime(
@@ -146,7 +154,7 @@ def new_user():
         # job_title = request.form['job_title']
         # department = request.form['department']
   
-        user = User(fname=f_name, lname=l_name, zipcode=zip_code, email=email, created_date=datetime,
+        user = User(firstname=first_name, lastname=last_name, f_name=fname, l_name=lname, zipcode=zip_code, email=email, created_date=datetime,
                         password=password, phone=phone, phone2=phone2, 
                         address1=address1, address2=address2, city=city, state=state)
 
@@ -161,9 +169,83 @@ def new_user():
     else:
         return render_template('templates/create_new_user.html', page=page)
 
+@app.route('/customers', methods=["POST"])
+def show_customer():
+    page='show_customer'
+    if request.method == "POST":
 
-#to display all quotes in system NEED TO DECIDE HOW TO ORGANIZE
-# @app.route('/templates/quotes/invoices?/TBD', methods=['POST'])
+
+        @app.route('/Create_Invoice/', methods = ['GET', 'POST'])
+        def create_invoice():
+            task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
+
+        if (task == 'n'):
+            product_list = []
+            quantity = []
+            product_price = []
+    
+    while True:
+        product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
+                         "to quit: ")
+        if (product_number == 'q'):
+            print("\nQuitting ...\n")
+            break
+        if (len(product_number) != 8): 
+            print("\nInvalid product number, please try again.")
+        else:
+            with open("product_list.txt") as products:
+                for line in products:
+                    if product_number in line:
+                        single_product = line.split(" ")
+                        quantity = input("\nQuantity of the product " +
+                                         "to be purchased: ")
+                        code = single_product[0]
+                        product_name = single_product[1]
+                        price = float(single_product[2])
+                        total = (price) * int(quantity)
+                        product_list.append(product_name)
+                        quantity.append(quantity)
+                        product_price.append(total)
+                        break
+    print ("Your invoice: ")
+    for i in range(len(product_list)):
+        print ('\single_product', quantity[i], product_list[i],' for the ' +
+              'amount of $', product_price[i])
+    print ("Your total: $ ", sum(product_price))                   
+    if (task == "q"):
+        sys.exit()
+
+        db.session.add(invoice)
+        db.session.commit()
+        return redirect(url_for('show_invoice'))
+
+    return render_template("create_invoice.html", title = gettext('create_invoice'), form = form)
+
+app.jinja_env.globals.update(Create_Invoice="create_invoice.html")
+@app.route('/invoice/confirm/<int:invoice_id>')
+def confirm_invoice(invoice_id):
+    invoice = Invoice.query.filter(Invoice.id==invoice_id).first()
+    invoice.confirm = datetime.datetime.now()
+    db.session.commit()
+    return redirect(url_for('show_invoice', invoice_id=invoice.id))
+
+
+@app.route('/invoice/paid/<int:invoice_id>')
+def invoice_paid(invoice_id):
+    invoice = Invoice.query.filter(invoice_number==invoice_id).first()
+    invoice_paid = datetime.datetime.now()
+    db.session.commit()
+    return redirect(url_for('show_invoice', invoice_id=invoice_number))
+
+
+@app.route('/invoice/delete/<int:invoice_id>')
+def invoice_delete(invoice_id):
+    invoice = Invoice.query.filter(Invoice_number==invoice_id).first()
+    db.session.delete(invoice)
+    db.session.commit()
+    flash(gettext(u"Delete Succesfully!"))
+    return redirect(url_for('all_invoices'))
+
 
 
 # @app.route('invoices/new_quote/', methods=['POST'])
@@ -178,7 +260,7 @@ def new_user():
 #     # in_stock
 #     # in_stock_date
 #     created_date = (request.form['date_received']),
-
+#invoice.get_status
 #to display all invoices in system
 # @app.route('/all_invoices/', methods=['POST'])
 
@@ -205,7 +287,7 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # # Use the DebugToolbar
-    #DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(port=5001, host='0.0.0.0')
 
