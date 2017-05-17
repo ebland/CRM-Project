@@ -4,16 +4,11 @@ import datetime
 import os
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for
-from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User 
+from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User_Roles, User, Product, Quote, Invoice 
 
 app = Flask(__name__)
 app.jinja_env.undefined = StrictUndefined
 app.secret_key = "ABC"
-
-# ??from flask_debugtoolbar import DebugToolbarExtension
-# ??user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-# Ask Leslie if the LoginManager found during research & WTF Forms  
-#  add on for Jinja would be ok to incorporate into my project.
 
 
 @app.route('/')
@@ -24,19 +19,16 @@ def index():
 @app.route('/search')
 def search():
     """Search."""
-    # import pdb; pdb.set_trace()
-    # 1. get form inputs (fname, lname)
+
     fname = request.args.get('fname')
     lname = request.args.get('lname')
 
-    # 2. Search DB using SQLAlchemy for fname and lname (Table name is customerts)
     try:
         customer = db.session.query(Customer).filter(Customer.fname==fname).filter(Customer.lname==lname).one()
     except:
         flash("Customer not found!!!")
         return redirect('/')
 
-    # 3. Display search results
     return render_template("search_results.html", customer=customer)
 
 
@@ -53,7 +45,7 @@ def login():
     elif password == str(user.password):
         session['user_id'] = user.user_id
         flash('User: {} has been logged in!'.format(email))
-        return redirect('homepage.html/'+str(user.user_id))
+        return redirect('/dashboard')
     else:
         flash('Password does not match!')
 
@@ -69,11 +61,20 @@ def logout():
 
     return render_template('homepage.html')
 
-# @app.route('/dashboard')
-# #???Ask Leslie how to connect this "@login_required" to result of route above
-# #???Ask Leslie how to connect this "@role_id_required('admin')to check user role
-# def dashboard():
-#     """Dashboard"""
+@app.route('/dashboard')
+def dashboard():
+    """Dashboard"""
+    user_id = session.get('user_id')
+    user = User.query.filter_by(user_id=user_id).first()
+    role = user.roles.name
+    # if the role is admin
+    #   find show quotes, customers, jobs
+    #   show admin dashboard, passing in data
+    # if the role is customer
+    #   find quotes, projects, invoices
+    #   show the customer dash, pass in data
+    # ... same for estimator, staff
+
 
 #     return render_template('templates/dashboard.html', page=page)
 
@@ -158,15 +159,10 @@ def new_user():
 
 #to display all quotes in system NEED TO DECIDE HOW TO ORGANIZE
 # @app.route('/templates/quotes/invoices?/TBD', methods=['POST'])
-#???Ask Leslie how to connect this "@login_required" to result of route above
-#???Ask Leslie how to connect this "@role_id_required('admin')
-#@roles_accepted('admin', 'etc..') to check user role_id
 
 
 # @app.route('invoices/new_quote/', methods=['POST'])
-#???Ask Leslie how to connect this "@login_required" to result of route above
-#???Ask Leslie how to connect this "@role_id_required('admin')
-#@roles_accepted('admin', 'etc..') to check user role_id
+
 # def new_quote():
 #     quote_number = request.form['quote_number']
 #     #I want to do a timestamp here UNIX
@@ -179,25 +175,19 @@ def new_user():
 #     created_date = (request.form['date_received']),
 
 #to display all invoices in system
-# @app.route('/templates/TBD?invoices/', methods=['POST'])
-#???Ask Leslie how to connect this "@login_required" to result of route above
-#???Ask Leslie how to connect this "@role_id_required('admin')
-#@roles_accepted('admin', 'etc..') to check user role_id
+# @app.route('/all_invoices/', methods=['POST'])
 
 
-# @app.route('invoices/new_invoice/', methods=['POST'])
-#???Ask Leslie how to connect this "@login_required" to result of route above
-#???Ask Leslie how to connect this "@role_id_required('admin')
-#@roles_accepted('admin', 'etc..') to check user role_id
-# def new_invoice():
-#     invoice_number = request.form['invoice_number']
-#     #I want to do a timestamp here UNIX
-#     # product_number
-#     # purchase_order_number
-#     # status
-#     # in_stock
-#     # in_stock_date
-#     created_date = (request.form['date_received']),
+# @app.route('/create_invoice/', methods=["GET", "POST"])
+# # def new_invoice():
+# #     invoice_number = request.form['invoice_number']
+# #     #I want to do a timestamp here UNIX
+# #     # product_number
+# #     # purchase_order_number
+# #     # status
+# #     # in_stock
+# #     # in_stock_date
+# #     created_date = (request.form['date_received']),
 
 
 
