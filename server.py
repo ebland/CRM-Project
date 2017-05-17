@@ -2,9 +2,10 @@
 import json
 import datetime
 import os
+from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for
-from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User_Roles, User, Product, Quote, Invoice 
+from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User 
 
 app = Flask(__name__)
 app.jinja_env.undefined = StrictUndefined
@@ -83,7 +84,7 @@ def dashboard():
 def add_customer():
     """Display Add Customer Form"""
     
-    return render_template("add_customer.html")
+    return render_template("templates/create_new_user.html")
 
 
 @app.route('/process_add_customer')
@@ -93,7 +94,10 @@ def add_customer_to_db():
     l_name = request.args.get('lname')
     zip_code = request.args.get('zipcode')
     email = request.args.get('email')
-    created_date = request.args.get('datetime')
+    created_date = datetime.datetime.strptime(
+            str(request.get['datetime']),
+            '%m/%d/%Y'
+        ).strftime('%Y-%m-%d')
     password = request.args.get('password')
     phone = request.args.get('phone')
     phone2 = request.args.get('phone2')
@@ -115,9 +119,10 @@ def add_customer_to_db():
 
     return redirect(url_for('/')) #DASHBOARD??????
 
-@app.route('/new_user/', methods=["GET", "POST"])
-#???Ask Leslie how to connect this "@login_required" to result of route above
-#???Ask Leslie how to connect this "@role_id_required('admin')to check user role
+    else:
+        return render_template('templates/create_new_user.html', page=page)
+
+@app.route('/create_new_user/', methods=["GET", "POST"])
 def new_user():
     page = 'All Users'
     if request.method == "POST":
@@ -154,7 +159,7 @@ def new_user():
         return redirect(url_for('/'))
 
     else:
-        return render_template('templates/new_user.html', page=page)
+        return render_template('templates/create_new_user.html', page=page)
 
 
 #to display all quotes in system NEED TO DECIDE HOW TO ORGANIZE
@@ -200,7 +205,7 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    #DebugToolbarExtension(app)
 
     app.run(port=5001, host='0.0.0.0')
 
