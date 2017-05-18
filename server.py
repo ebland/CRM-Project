@@ -5,7 +5,7 @@ import os
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for
-from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User 
+# from model import connect_to_db, db, Customer, Invoice, Product, Invoice_Detail, Role_ID, User 
 from flask_debugtoolbar import DebugToolbarExtension
 
 
@@ -127,9 +127,9 @@ def add_customer_to_db():
 
     return redirect(url_for('/')) #DASHBOARD??????
     
-    return render_template('templates/create_new_user.html', page=page)
+    return render_template('create_new_user.html', page=page)
 
-@app.route('/templates/create_new_user/', methods=["GET", "POST"])
+@app.route('/create_new_user', methods=["GET", "POST"])
 def new_user():
     page = 'create_new_user'
     if request.method == "POST":
@@ -167,7 +167,7 @@ def new_user():
         return redirect(url_for('/'))
 
     else:
-        return render_template('templates/create_new_user.html', page=page)
+        return render_template('create_new_user.html', page=page)
 
 @app.route('/customers', methods=["POST"])
 def show_customer():
@@ -249,7 +249,6 @@ def invoice_delete(invoice_id):
 
 
 # @app.route('invoices/new_quote/', methods=['POST'])
-
 # def new_quote():
 #     quote_number = request.form['quote_number']
 #     #I want to do a timestamp here UNIX
@@ -260,8 +259,10 @@ def invoice_delete(invoice_id):
 #     # in_stock
 #     # in_stock_date
 #     created_date = (request.form['date_received']),
+
 #invoice.get_status
 #to display all invoices in system
+
 # @app.route('/all_invoices/', methods=['POST'])
 
 
@@ -281,15 +282,11 @@ def invoice_delete(invoice_id):
 if __name__ == "__main__":
     app.debug = True
 
-    # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug  
 
     connect_to_db(app)
 
-    # # Use the DebugToolbar
     DebugToolbarExtension(app)
 
     app.run(port=5001, host='0.0.0.0')
 
-# if __name__ == '__main__':
-#     app.run(app, host='0.0.0.0', debug=True)
