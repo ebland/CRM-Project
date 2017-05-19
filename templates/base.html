@@ -8,13 +8,14 @@
           rel="stylesheet">
 </head>
 <body>
-    {% if 'user_id' in session %}
+
 <div>
     {% for flash in get_flashed_messages() %}
       <div class="alert alert-danger" style="width:90%; margin:0 auto;">{{ flash }}</div>
     {% endfor %}
     {% block content %}
     {% endblock %}
+   
 </div>
 
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>

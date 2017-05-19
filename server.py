@@ -12,12 +12,12 @@ app = Flask(__name__)
 
 app.secret_key = "ABC"
 
-@app.errorhandler(404)
-def page_not_found(error):
+#@app.errorhandler(404)
+#def page_not_found(error):
 
-    return render_template('page_not_found.html'), 404
+    #return render_template('page_not_found.html'), 404
 
-@app.route('/')
+@app.route('/homepage')
 def index():
     """Homepage."""
 
@@ -95,7 +95,7 @@ def dashboard():
 #     return render_template('templates/dashboard.html', page=page)
 
 
-@app.route('/users')
+@app.route('/all_users')
 def user_list():
     """Show List of All Users is ECRM."""
 
@@ -104,11 +104,41 @@ def user_list():
 
 
 @app.route('/create_new_user', methods=["GET", "POST"])
-def add_user():
-    """Display Create New User Form"""
-    
-    return render_template("templates/create_new_user.html")
+def new_user():
+    page = 'create_new_user'
+    if request.method == "POST":
+        firstname = request.form['first_name']
+        lastname = request.form['last_name']
+        f_name = request.args.get('fname')
+        l_name = request.args.get('lname')
+        zip_code = request.args.get('zipcode')
+        email = request.args.get('email')
+        created_date = datetime.datetime.strptime(
+            str(request.get['datetime']),
+            '%m/%d/%Y'
+        ).strftime('%Y-%m-%d')
+        password = request.args.get('password')
+        phone = request.args.get('phone')
+        phone2 = request.args.get('phone2')
+        address1 = request.args.get('address1')
+        address12= request.args.get('address2')
+        city = request.args.get('city')
+        state = request.args.get('state')
+  
+        user = User(firstname=first_name, lastname=last_name, f_name=fname, l_name=lname, zipcode=zip_code, email=email, created_date=datetime,
+                        password=password, phone=phone, phone2=phone2, 
+                        address1=address1, address2=address2, city=city, state=state)
 
+        db.session.add(user)
+   
+        db.session.commit()
+  
+        flash("User was addded successfully!!!")
+        
+        return redirect(url_for('/'))
+
+    else:
+        return render_template('create_new_user.html')
 
 # @app.route('/process_add_customer', methods=["GET", "POST"])
 # def add_customer_to_db():
@@ -147,45 +177,6 @@ def add_user():
     
 #     return render_template('create_new_user.html', page=page)
 
-# @app.route('/create_new_user', methods=["GET", "POST"])
-# def new_user():
-#     page = 'create_new_user'
-#     if request.method == "POST":
-#         firstname = request.form['first_name']
-#         lastname = request.form['last_name']
-#         f_name = request.args.get('fname')
-#         l_name = request.args.get('lname')
-#         zip_code = request.args.get('zipcode')
-#         email = request.args.get('email')
-#         created_date = datetime.datetime.strptime(
-#             str(request.get['datetime']),
-#             '%m/%d/%Y'
-#         ).strftime('%Y-%m-%d')
-#         password = request.args.get('password')
-#         phone = request.args.get('phone')
-#         phone2 = request.args.get('phone2')
-#         address1 = request.args.get('address1')
-#         address12= request.args.get('address2')
-#         city = request.args.get('city')
-#         state = request.args.get('state')
-#         #IF STAFF add these two ASK LESLIE HOW ORGANIZE
-#         # job_title = request.form['job_title']
-#         # department = request.form['department']
-  
-#         user = User(firstname=first_name, lastname=last_name, f_name=fname, l_name=lname, zipcode=zip_code, email=email, created_date=datetime,
-#                         password=password, phone=phone, phone2=phone2, 
-#                         address1=address1, address2=address2, city=city, state=state)
-
-#         db.session.add(user)
-   
-#         db.session.commit()
-  
-#         flash("User was addded successfully!!!")
-        
-#         return redirect(url_for('/'))
-
-#     else:
-#         return render_template('create_new_user.html', page=page)
 
 # @app.route('/customers', methods=["POST"])
 # def show_customer():
