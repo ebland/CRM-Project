@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  
+  <ul class="breadcrumb">
+    <li><a href="/create_new_user">Create New User</a> <span class="divider">/</span></li>
+    <li class="active">Registration</li>
+  </ul>
+
+  <div class="form-group">
+    <div id="create_new_user">
+        <form action="/create_new_user" method="POST">
+          <div class="header">Instructions: Fill in all information then select "Create User" button to submit.</div>  
+          <div class="fields">
+            First Name<br>
+            <input type="text" name="fname" {{ % fname % }} required><br>
+            Last Name<br>
+            <input type="text" name="lname"  {{ % lname % }} required><br>
+            Job Title<br>
+            <input type="text" name="job_title" {{ % job_title % }><br> 
+            Department
+            <input type="text" name="department" {{ % department % }><br> 
+            Birthday<br>
+            <input type="text" name="birthdate" {{ % dob % }><br>  
+            Phone Number<br>
+            <input type="text" name="phone_number" {{ % phone % }><br> 
+            Secondary Phone Number<br>
+            <input type="text" name="phone_number_2" {{ % phone2 % }><br>  
+            Company<br>
+            <input type="text" name="company" {{ % company % }><br>  
+            Address<br>
+            <input type="text" name="address1" {{ % address1 % }><br>  
+            Apt/Ste/Lot/Rm Number<br>
+            <input type="text" name="address2" {{ % address2 % }><br>  
+            City<br>
+            <input type="text" name="city" {{ % city % }><br>  
+            State<br>
+            <input type="text" name="state" {{ % state % }><br>  
+            Zip Code<br>
+            <input type="text" name="zipcode" {{ % zip_code % }><br>  
+            
+            <!--Need to see how to keep status new until created then show as active-->
+            {{ % status % }}
+              <!--Need to post a TS with datetime now function-->
+            {{ % created_at % }} 
+            <!--need to record via TS with datetime now function to show the last modification-->
+            {{ % modified % }}
+            </div>
+        </form>
+
+        <div class="field">
+          <button class="button normal" type="submit">Create User</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+{% endblock %}
