@@ -103,13 +103,11 @@ def user_list():
     return render_template("all_users.html", user=user)
 
 
-
-
-# @app.route('/add_customer', methods=["GET", "POST"])
-# def add_customer():
-#     """Display Add Customer Form"""
+@app.route('/create_new_user', methods=["GET", "POST"])
+def add_user():
+    """Display Create New User Form"""
     
-#     return render_template("templates/create_new_user.html")
+    return render_template("templates/create_new_user.html")
 
 
 # @app.route('/process_add_customer', methods=["GET", "POST"])
