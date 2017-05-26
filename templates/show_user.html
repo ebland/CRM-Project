@@ -2,21 +2,22 @@
 
 
 {% block content %}
+<form action="/show_user", methods=["GET", "POST"]>
 
 <h2>User Information:</h2>
 <ul>
   {% for user in users %}
     <li>
-      <a href="/users/{{ user.user_id }}">
+      <a href="show_user/{{ user.user_id }}">
         {{ user.email}} ({{user.user_id}})
       </a>
     </li>
   {% endfor %} 
 </ul>
-
+</form>
 
   <ul class="breadcrumb">
-    <li>  <a href="/users/{{ user.user_id }}">
+    <li>  <a href="show_user/{{ user.user_id }}">
         {{ user.email}} ({{user.user_id}})</a> <span class="divider">/</span></li>
     <li class="active">{{ user.fname() }} - {{ user.lname }}</li>
   </ul>
@@ -38,16 +39,16 @@
 
         Detailed User Information for Administration Only:
         <!--create this in model to be imported here 5/17/17-->
-        Employee/Staff: {{ is_Staff }}
+        <!-- Employee/Staff: {{ is_Staff }} -->
         Job Title: {{ job_title }}
         Department: {{ department }}
-        Birthday: {{ dob }}
+        Birthday: {{ birthdate }}
 
-        User Status: {{ active }}
+        <!-- User Status: {{ active }} -->
         User Since: {{ created_at }}
-        User Last Modified: {{ datetime.ts }}
+        <!-- User Last Modified: {{ datetime.ts }} -->
 
-        RoleID/Permissions: {{ Role_ID}}
+        RoleID/Permissions: {{ Role_ID }}
 
         <div class="field">
           <button class="btn btn-primary" type="submit">Update User</button>

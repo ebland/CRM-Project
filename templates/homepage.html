@@ -1,5 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<h1>Login</h1>
+    <form action="/login_process" method="POST">
+
+        <div>
+            <label>Email:
+                <input type="email" name="email" required>
+            </label>
+        </div>
+
+        <div>
+            <label>Password:
+                <input type="password" name="password" required>
+            </label>
+        </div>
+
+        <div>
+            <input type="submit" value="Log In">
+        </div>
+
+    </form>
+
     <div id="homepage">
         <form action="/search">
             First Name<br>
@@ -15,7 +37,7 @@
     <h1>ECM Dashboard/Homepage:</h1>
 
 <h2>Users</h2>
-<p><a href="/all_users">USER LIST</a></p>
+<p><a href="templates/all_users.html">USER LIST</a></p>
 
 <h2>Products</h2>
 <p><a href="/TBD">PRODUCT LIST</a></p>
@@ -23,6 +45,29 @@
 <h2>Invoices</h2>
 <p><a href="/TBD">INVOICES LIST</a></p>
 
+<script type="text/javascript">
+ var loginJson ={};
+ var loginOK;
+
+//<!--Build object checkLogin for AJAX request-->
+
+ function checkLogin(evt) {
+    loginJson['email'] = $('#email-field').val();
+    loginJson['password'] = $('#password-field').val();
+
+//<!--Verify correct email and password (login) of user with AJAX-->
+
+    $.post('login.json', loginJson, function(result){
+        $('#display-msg').html(result['login']);
+        loginOk = result['login'];
+    })
+        if (loginOk == 'User not found') {
+            evt.preventDefault();
+        }
+    }
+//<!--Event Handler to check/validate correct email and password of user-->
+    $('#check-login').on('submit', checkLogin);
+</script>
 {% endblock %}
 
 

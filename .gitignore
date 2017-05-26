@@ -1,3 +1,13 @@
 /env
 *.pyc
 
+dump.sql
+dumpdraft.sql
+dumpfile.sql
+dumpfiletest.sql
+dumpfiletest1.sql
+ecrm-avatar.png
+ecrm-new.sql
+newmodel.py
+requirements.txt
+untitled

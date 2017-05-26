@@ -9,36 +9,42 @@
 
   <div class="form-group">
     <div id="create_new_user">
-        <form action="/create_new_user" method="POST">
+        <form action="/create_new_user_process" method="POST">
           <div class="header">Instructions: Fill in all information then select "Create User" button to submit.</div>  
           <div class="fields">
             First Name<br>
-            <input type="text" name="fname" {{ fname }} required><br>
+            <input type="text" name="fname" required><br>
             Last Name<br>
-            <input type="text" name="lname"  {{ lname }} required><br>
+            <input type="text" name="lname" required><br>
+            Password<br>
+            <input type="text" name="password"><br> 
             Job Title<br>
-            <input type="text" name="job_title" {{ job_title }}><br> 
+            <input type="text" name="job_title"><br> 
             Department
-            <input type="text" name="department" {{ department }}><br> 
+            <input type="text" name="department"><br> 
             Birthday<br>
-            <input type="text" name="birthdate" {{ dob }}><br>  
+            <input type="text" name="birthdate"><br>  
             Phone Number<br>
-            <input type="text" name="phone_number" {{ phone }}><br> 
+            <input type="text" name="phone"><br> 
+            Email<br>
+            <input type="text" name="email"><br> 
             Secondary Phone Number<br>
-            <input type="text" name="phone_number_2" {{ phone2 }}><br>  
+            <input type="text" name="phone2"><br>  
             Company<br>
-            <input type="text" name="company" {{ company }}><br>  
+            <input type="text" name="company"><br>  
             Address<br>
-            <input type="text" name="address1" {{ address1 }}><br>  
+            <input type="text" name="address1"><br>  
             Apt/Ste/Lot/Rm Number<br>
-            <input type="text" name="address2" {{ address2 }}><br>  
+            <input type="text" name="address2"><br>  
             City<br>
-            <input type="text" name="city" {{ city }}><br>  
+            <input type="text" name="city"><br>  
             State<br>
-            <input type="text" name="state" {{ state }}><br>  
+            <input type="text" name="state"><br>  
             Zip Code<br>
-            <input type="text" name="zipcode" {{ zip_code }}><br>  
+            <input type="text" name="zipcode"><br>  
             
+            <input class="button normal" type="submit" value="Create User">
+         
             <!--Need to see how to keep status new until created then show as active-->
             {{ status }}
               <!--Need to post a TS with datetime now function-->
@@ -48,9 +54,7 @@
             </div>
         </form>
 
-        <div class="field">
-          <button class="button normal" type="submit">Create User</button>
-        </div>
+        
       </div>
     </form>
 
