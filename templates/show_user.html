@@ -8,7 +8,7 @@
 <ul>
   {% for user in users %}
     <li>
-      <a href="show_user/{{ user.user_id }}">
+      <a href="/show_user/ {{ user.user_id }}">
         {{ user.email}} ({{user.user_id}})
       </a>
     </li>
@@ -17,7 +17,7 @@
 </form>
 
   <ul class="breadcrumb">
-    <li>  <a href="show_user/{{ user.user_id }}">
+    <li>  <a href="/show_user/{{ user.user_id }}">
         {{ user.email}} ({{user.user_id}})</a> <span class="divider">/</span></li>
     <li class="active">{{ user.fname() }} - {{ user.lname }}</li>
   </ul>
@@ -52,6 +52,7 @@
 
         <div class="field">
           <button class="btn btn-primary" type="submit">Update User</button>
+          <!-- Imay need to tie this to a separate delete_form -->
           <a class="btn btn-danger pull-right" type="button" href="{{ url_for('.delete', id=user.id) }}">Delete</a>
         </div>
 

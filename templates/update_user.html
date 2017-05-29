@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  
+  {% if current_user %}
   <ul class="breadcrumb">
     <li><a href="/update_user">Update User</a> <span class="divider">/</span></li>
     <li class="active">User Information</li>

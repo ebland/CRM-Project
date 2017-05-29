@@ -36,14 +36,25 @@
 
     <h1>ECM Dashboard/Homepage:</h1>
 
-<h2>Users</h2>
-<p><a href="templates/all_users.html">USER LIST</a></p>
+{% if user in session %}
+    {% if 'admin' in session['role_ids'] %}
 
-<h2>Products</h2>
-<p><a href="/TBD">PRODUCT LIST</a></p>
+    <h2>Users</h2>
 
-<h2>Invoices</h2>
-<p><a href="/TBD">INVOICES LIST</a></p>
+    <p><a href="templates/all_users.html">USER LIST</a></p>
+    
+    {% endif %}
+
+    <h2>Products</h2>
+
+    <p><a href="/TBD">PRODUCT LIST</a></p>
+
+    <h2>Invoices</h2>
+
+    <p><a href="/TBD">INVOICES LIST</a></p>
+
+{% endif %}
+
 
 <script type="text/javascript">
  var loginJson ={};

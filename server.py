@@ -4,7 +4,7 @@ import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session
-from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product 
+from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product, Invoice
 from flask_debugtoolbar import DebugToolbarExtension
 #from model import LoginManager, LoginForm
 #app.jinja_env.undefined = StrictUndefined
@@ -71,7 +71,7 @@ def login_process():
         session['user_id'] = user.user_id
         session['role_id'] = [] 
         for role in user.roles:
-            session['role_id'].append(role.role_id)
+            session['role_ids'].append(role.name)
 
         flash('User: {} has been logged in!'.format(email))
         return redirect('/homepage')
@@ -114,25 +114,26 @@ def dashboard():
     return 'a dashboard'
 
     user_id = session.get('user_id')
+    roles = session.get('role_id') 
     user = User.query.filter_by(user_id=user_id).first()
-    #role = user.roles.name
-# if the role is admin
-    #   find show quotes, customers, jobs
+
+    if 'admin' in roles:
     #   show admin dashboard, passing in data
     #if the role is customer
     #   find quotes, projects, invoices
     #   show the customer dash, pass in data
     # ... same for estimator, staff
-#     return render_template('templates/dashboard.html', page=page)
+        return render_template('templates/dashboard.html', page=page)
 
 
 @app.route('/all_users')
 def user_list():
     """Show List of All Users is ECRM."""
     
-
     user = User.query.get(user_id)
-    return render_template("all_users.html", user=user)
+
+    return render_template("templates/all_users.html", user=user)
+
 
 @app.route('/create_new_user')
 def create_new_user():
@@ -176,6 +177,7 @@ def new_user():
     else:
         return render_template('create_new_user.html')
 
+
 @app.route('/process_add_customer', methods=["GET", "POST"])
 def add_customer_to_db():
     """Add customer to DB."""
@@ -195,7 +197,6 @@ def add_customer_to_db():
     state = request.form.get('state')
     company = request.form.get('company')
   
-
     customer = Customer(fname=fname, lname=lname, zipcode=zip_code, email=email,
                         password=password, phone=phone, phone2=phone2, 
                         address1=address1, address2=address2, city=city, state=state,
@@ -212,57 +213,57 @@ def add_customer_to_db():
     return render_template('create_new_user.html', page=page)
 
 
-# @app.route('/customers', methods=["POST"])
-# def show_customer():
-#     page='show_customer'
-#     if request.method == "POST":
+@app.route('/customers', methods=["POST"])
+def show_customer():
+    page='show_customer'
+    if request.method == "POST":
 
 
-    #     @app.route('/Create_Invoice/', methods = ['GET', 'POST'])
-    #     def create_invoice():
-    #         task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
+        @app.route('/Create_Invoice/', methods = ['GET', 'POST'])
+        def create_invoice():
+            task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
 
-    #     if (task == 'n'):
-    #         product_list = []
-    #         quantity = []
-    #         product_price = []
+        if (task == 'n'):
+            product_list = []
+            quantity = []
+            product_price = []
     
-    # while True:
-    #     product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
-    #                      "to quit: ")
-    #     if (product_number == 'q'):
-    #         print("\nQuitting ...\n")
-    #         break
-    #     if (len(product_number) != 8): 
-    #         print("\nInvalid product number, please try again.")
-    #     else:
-    #         with open("product_list.txt") as products:
-    #             for line in products:
-    #                 if product_number in line:
-    #                     single_product = line.split(" ")
-    #                     quantity = input("\nQuantity of the product " +
-    #                                      "to be purchased: ")
-    #                     code = single_product[0]
-    #                     product_name = single_product[1]
-    #                     price = float(single_product[2])
-    #                     total = (price) * int(quantity)
-    #                     product_list.append(product_name)
-    #                     quantity.append(quantity)
-    #                     product_price.append(total)
-    #                     break
-    # print ("Your invoice: ")
-    # for i in range(len(product_list)):
-    #     print ('\single_product', quantity[i], product_list[i],' for the ' +
-    #           'amount of $', product_price[i])
-    # print ("Your total: $ ", sum(product_price))                   
-    # if (task == "q"):
-    #     sys.exit()
+    while True:
+        product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
+                         "to quit: ")
+        if (product_number == 'q'):
+            print("\nQuitting ...\n")
+            break
+        if (len(product_number) != 8): 
+            print("\nInvalid product number, please try again.")
+        else:
+            with open("product_list.txt") as products:
+                for line in products:
+                    if product_number in line:
+                        single_product = line.split(" ")
+                        quantity = input("\nQuantity of the product " +
+                                         "to be purchased: ")
+                        code = single_product[0]
+                        product_name = single_product[1]
+                        price = float(single_product[2])
+                        total = (price) * int(quantity)
+                        product_list.append(product_name)
+                        quantity.append(quantity)
+                        product_price.append(total)
+                        break
+    print ("Your invoice: ")
+    for i in range(len(product_list)):
+        print ('\single_product', quantity[i], product_list[i],' for the ' +
+              'amount of $', product_price[i])
+    print ("Your total: $ ", sum(product_price))                   
+    if (task == "q"):
+        sys.exit()
 
-    #     db.session.add(invoice)
-    #     db.session.commit()
-    #     return redirect(url_for('show_invoice'))
+        db.session.add(invoice)
+        db.session.commit()
+        return redirect(url_for('show_invoice'))
 
-    # return render_template("create_invoice.html", title = gettext('create_invoice'), form = form)
+    return render_template("create_invoice.html")
 
 app.jinja_env.globals.update(Create_Invoice="create_invoice.html")
 
@@ -295,7 +296,7 @@ def invoice_delete(invoice_id):
 
 
 
-@app.route('invoices/new_quote/', methods=['POST'])
+@app.route('/invoices/new_quote/', methods=['POST'])
 def new_quote():
     quote_number = request.form['quote_number']
 #     #I want to do a timestamp here UNIX

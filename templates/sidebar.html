@@ -1,0 +1,129 @@
+        
+        <section class="sidebar">
+
+{#         <!-- {% if logged_in == True %} -->#}
+{#          <div class="user-panel">#}
+{#              <div class="pull-left image">#}
+{#                <img src="avatar-liz-color.png" class="img-circle" alt="User Image">#}
+{#              </div>#}
+{#              <div class="pull-left info">#}
+{#                <p>User Name</p>#}
+{##}
+{#                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>#}
+{#              </div>#}
+{#          </div>#}
+
+          <!-- Search Form -->
+         
+          <form action="search" method="get" class="sidebar-form">
+              <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <span class="input-group-btn">
+                  <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+                </span>
+              </div>
+          </form>
+          {% endif %}
+
+        
+          <ul class="sidebar-menu">
+{#            <li class="header"></li><li class="header"></li>#}
+
+            <li><a href="{{ url_for('root_path') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+
+            {# Settings #}
+            <li class="treeview">
+              <a href="#"><i class="fa fa-cogs"></i> <span>Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
+              <ul class="treeview-menu">
+
+               
+                  {# Personal Settings #}
+                  <li class="treeview">
+                      <a href="#"><i class="fa fa-cog"></i> <span>Personal Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
+                      <ul class="treeview-menu">
+                        <li><a href="{{ url_for('account_settings') }}"><i class="fa fa-genderless"></i> <span>Account</span></a></li>
+                        {% if app_config_settings['Toggle Placeholders'] == 'true' %}
+                          <li><a href="{{ url_for('customer_profile') }}"><i class="fa fa-genderless"></i> <span>Profile</span></a></li>
+                        {% endif %}
+                      </ul>
+                  </li>
+
+                  {# App Settings #}
+                  <li class="treeview">
+                      <a href="#"><i class="fa fa-cogs"></i> <span>Application Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
+                      <ul class="treeview-menu">
+                        <li><a href="{{ url_for('user_management') }}"><i class="fa fa-genderless"></i> <span>User Management</span></a></li>
+                        <li><a href="{{ url_for('app_settings') }}"><i class="fa fa-genderless"></i> <span>App Config</span></a></li>
+                        <li><a href="{{ url_for('module_settings') }}"><i class="fa fa-genderless"></i> <span>Module Settings</span></a></li>
+                        <li><a href="{{ url_for('all_users') }}"><i class="fa fa-genderless"></i> <span>Users</span></a></li>
+                      </ul>
+                  </li>
+
+                {# User Settings Group #}
+                
+                  <li><a href="{{ url_for('account_settings') }}"><i class="fa fa-cog"></i> <span>Account</span></a></li>
+                  <li><a href="{{ url_for('show_user') }}"><i class="fa fa-cog"></i> <span>Profile</span></a></li>
+                
+
+              </ul>
+            </li>
+
+
+            {# Modules #}
+            {% if logged_in == True %}<li class="header"></li>{% endif %}
+
+            <li class="treeview">
+              <a href="#"><i class="fa fa-fort-awesome"></i> <span>Operations</span> <i class="fa fa-angle-left pull-right"></i></a>
+              <ul class="treeview-menu">
+                <li><a href="{{ url_for('quotes') }}"><i class="fa fa-home"></i> <span>Quotes</span></a></li>
+                <li><a href="{{ url_for('jobs') }}"><i class="fa fa-chevron-circle-right"></i> <span>Jobs</span></a></li>
+                {% if app_config_settings['Toggle Placeholders'] == 'true' %}
+                  <li><a href="{{ url_for('approved') }}"><i class="fa fa-chevron-circle-right"></i> <span>Scheduled</span></a></li>
+                {% endif %}
+               
+                  <li><a href="{{ url_for('job_settings') }}"><i class="fa fa-cogs"></i> <span>Job Settings</span></a></li>
+                
+              </ul>
+            </li>
+            
+
+            
+            <li class="treeview">
+              <a href="#"><i class="ion-person-stalker"></i> <span>Client Management</span> <i class="fa fa-angle-left pull-right"></i></a>
+              <ul class="treeview-menu">
+                <li><a href="{{ url_for('create_new_user') }}">  <i class="fa fa-home"></i> <span>Create New User</span></a></li>
+                <li><a href="{{ url_for('all_users') }}">  <i class="fa fa-chevron-circle-right"></i> <span>Customer List</span></a></li>
+                
+                  <li><a href="{{ url_for('ecrm_settings') }}"><i class="fa fa-cogs"></i> <span>ECRM Settings</span></a></li>
+                
+              </ul>
+            </li>
+            
+            <li class="treeview">
+              <a href="#"><i class="fa fa-users"></i> <span>Staff</span> <i class="fa fa-angle-left pull-right"></i></a>
+              <ul class="treeview-menu">
+                <li><a href="{{ url_for('staff_home') }}"><i class="fa fa-home"></i> <span>Staff</span></a></li>
+                <li><a href="{{ url_for('all_users') }}"><i class="fa fa-chevron-circle-right"></i> <span>Staff List</span></a></li>
+                
+                  <li><a href="{{ url_for('hrm_settings') }}"><i class="fa fa-cogs"></i> <span>Staff Settings</span></a></li>
+                
+              </ul>
+            </li>
+            
+
+          {% if app_config_settings['Toggle Placeholders'] == 'true' %}
+            
+            <li class="treeview">
+              <a href="#"><i class="fa fa-bar-chart"></i> <span>Invoices</span> <i class="fa fa-angle-left pull-right"></i></a>
+              <ul class="treeview-menu">
+                <li><a href="{{ url_for('invoice') }}"><i class="fa fa-home"></i> <span>Invoices</span></a></li>
+                <li><a href="{{ url_for('show_invoices') }}"><i class="fa fa-chevron-circle-right"></i> <span>Open Invoices</span></a></li>
+                <li><a href="{{ url_for('create_new_invoioce') }}"><i class="fa fa-chevron-circle-right"></i> <span>Create New Invoice</span></a></li>
+                
+                  <li><a href="{{ url_for('invoice_settings') }}"><i class="fa fa-cogs"></i> <span>Invoice Settings</span></a></li>
+                {% endif %}
+              </ul>
+            </li>
+              </ul>
+        </section>
+       

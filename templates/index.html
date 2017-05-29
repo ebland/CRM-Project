@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+
+{% block content_header -%}
+  {% include "content_header.html" %} 
+{%- endblock content_header %}
+{% block content -%}
+{#  <div page-header>#}
+    <h4 class="page-header">Welcome{% if current_user.is_authenticated %}, {{ current_user.fname }}.
+      {% else %} ~{% endif %}
+    </h4>
+{#  </div>#}
+
+    {{ super() }}
+      {# {% include "dashboard_modules.html" %} #}
+      {# {% import "dashboard_modules.html" %} #}
+      {# {% include "dashboard_modules.html" %} #}
+
+{#Remove this for main project.    #}
+{#    <img src ="http://www.elizabethblandonline.com"/>#}
+
+{#    <h4>Current Features</h4>#}
+{#    <ul>#}
+{#      <li><a href="/checkin">Check-in Service</a></li>#}
+{#      <li><a href="/staff">CP List (WiP)</a></li>#}
+{#      <li><a href="/all_users">Client List (WiP)</a></li>#}
+{#    </ul>#}
+
+{% if app_config_settings['Toggle Placeholders'] == 'true' %}
+  <p> placeholders</p>
+
+  {% include "dashboard_modules.html" %} 
+{% else %}
+    <h3>Modules</h3>
+    <ul>
+      <li><a href="{{ url_for('all_users') }}">User Management</a></li>
+      <li><a href="{{ url_for('all_users') }}">Client  Management</a></li>
+      <li><a href="{{ url_for('all_staff') }}">Staff Management</a></li>
+    </ul>
+{% endif %}
+
+
+{%- endblock content %}
