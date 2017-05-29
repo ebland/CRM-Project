@@ -14,6 +14,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True, unique=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    role_id = db.Column(db.String(2), nullable=True)
 
     # Information
     fname = db.Column(db.String(50), nullable=False)
@@ -145,24 +146,25 @@ class Invoice(db.Model):
     __tablename__="invoice"
 
     invoice_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    customer_id = db.Column(db.Integer) 
-    # user_id=db.Column(db.Integer())
+    # customer_id = db.Column(db.Integer) 
     name = db.Column(db.String(90), nullable=False)
     description = db.Column(db.String(255), nullable=True)
     module_abbreviation =db.Column(db.String(4), nullable=True)
     invoice_created_date = db.Column(db.DateTime())
-    invoice_due_date = db.Column(db.DateTime)
-    # customer_id = db.Column(db.Integer(11), db.ForeignKey('customer.customer_id'))
+    invoice_due_date = db.Column(db.DateTime())
     job_id = db.Column(db.String(11))
     date_paid = db.Column(db.String(11))
     date_sent = db.Column(db.String(11))
-
+    product_quantity = db.Column(db.Integer())
     active = db.Column(db.String(11))
+
+    #need to fix these relationships
+
     # update_user_id = db.Column(db.Integer(11), nullable=True)
     # create_user_id=db.Column(db.Integer(11), nullable=False)
-
+    # customer_id = db.Column(db.Integer(11), db.ForeignKey('customer.customer_id'))
     # customers = db.relationship('Customer', backref=db.backref('invoice'))
-
+    # user_id=db.Column(db.Integer())
     # return render_template('invoice.html')
 
 
@@ -171,29 +173,23 @@ class Invoice_Detail(db.Model):
     __tablename__="invoice_detail"
 
     invoice_detail_id = db.Column(db.Integer, primary_key=True)
-
-    # invoice_number = db.Column(db.Unicode(50), db.ForeignKey('invoice.invoice_id'))
-    # product_number = db.Column(db.Unicode(50), db.ForeignKey('product.product_id'))
     purchase_order_number = db.Column(db.Unicode(50))
     created_at = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
 
     invoice = db.relationship('invoice', back_populates='products')
     product = db.relationship('product', back_populates='invoices')
-
+    # invoice_number = db.Column(db.Unicode(50), db.ForeignKey('invoice.invoice_id'))
+    # product_number = db.Column(db.Unicode(50), db.ForeignKey('product.product_id'))
 
 class Customer(db.Model):
 
     __tablename__='customer'
 
     customer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    # customer_id = db.Column(db.Integer(11), primary_key=True), db.ForeignKey('invoice.invoice_id')
-    # customer_type_id = db.Column(db.Integer(11), db.ForeignKey('customers.customer_type_id'), default ='0')
-    # user_id = db.Column(db.Integer(11), default = '0')
-    #customer_status = db.Column(db.Integer(2), nullable=False, default='0')
+    customer_status = db.Column(db.Integer())
     created = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
-
     email = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     # Information
@@ -216,10 +212,9 @@ class Customer(db.Model):
 
     created_at = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
-
-    invoice = relationship('invoice', backref='invoice')
-
-    # return render_template('show_user.html')
+    # user_id = db.Column(db.Integer())
+    
+        # return render_template('show_user.html')
 
 
 def seed_data():
@@ -252,6 +247,8 @@ def connect_to_db(app):
     db.app = app
     db.init_app(app)
 
+#solution for address conflicts would be to use this as main then relate it to different modules 
+#rather than have separate addresses (duplicates) under same user/customer table....
 
 # class address(): 
 #   address_id = db.Column(db.Integer(11), primary_key=True, nullable=False, autoincrement=True)
@@ -271,9 +268,9 @@ def connect_to_db(app):
 #   create_ip_address = db.Column(db.String(15), nullable=False)
 #   update_ip = db.Column(db.String(15), nullable=False)
 #   module_abbreviation = db.Column(db.String(4), nullable=True)
-#  # UNIQUE KEY owner_id (owner_id,owner_table,address_type),
+#   UNIQUE KEY owner_id (owner_id,owner_table,address_type),
 #   owner_id_single = db.Column(db.Integer(11), db.ForeignKey('owner_id.owner_id')) 
-#   # owner_table= db.Column(db.String(30), nullable=True, unique=True, db.ForeignKey('owner_table.owner_table'))
+#   owner_table= db.Column(db.String(30), nullable=True, unique=True, db.ForeignKey('owner_table.owner_table'))
 
 
 if __name__=="__main__":

@@ -59,7 +59,7 @@
       </div>
     </div>
     
-    {% for invoice in invoices %}
+  <!--   {% for invoice in invoices %}
       <tr data-id="{{ invoice.id }}">
        {% if invoices|length > 0 %}
         <h4>Invoices</h4>
@@ -74,7 +74,7 @@
                 <th class="col status"><span class='label label-{{ invoice.get_status() }}'>{{ invoice.confirm_invoice() }}</span></th>
               </tr>
             </tbody>
-          </table>
+          </table> -->
       </tr>
     {% endfor %}
   </div>  

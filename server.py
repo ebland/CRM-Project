@@ -4,10 +4,7 @@ import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session
-from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product, Invoice
-from flask_debugtoolbar import DebugToolbarExtension
-#from model import LoginManager, LoginForm
-#app.jinja_env.undefined = StrictUndefined
+from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product
 
 app = Flask(__name__)
 
@@ -18,26 +15,42 @@ app.secret_key = "ABC"
 
     #return render_template('page_not_found.html'), 404
 
+@app.route('/')
+def root():
+
+    return render_template("homepage.html")
+
 @app.route('/homepage')
 def index():
     """Homepage."""
 
     return render_template("homepage.html")
 
-@app.route('/search')
-def search():
-    return 'a search'
 
-    fname = request.args.get('fname')
-    lname = request.args.get('lname')
+@app.route('/search')
+def search():    
+    return render_template("search_result_form.html" )
+
+
+@app.route('/search_process', methods=['POST'])
+def search_process():
+    #return 'a search'
+     # 1. set email and password from form 
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    #return fname
 
     try:
-        customer = db.session.query(Customer).filter(Customer.fname==fname).filter(Customer.lname==lname).one()
+        customer = User.query.filter_by(fname=fname).first()
+        first_name = customer.fname
+        last_name = customer.lname
+        #customer = db.session.query(Customer).filter(Customer.fname==fname).filter(Customer.lname==lname).one()
     except:
+        return "Customer not found!!! "
         flash("Customer not found!!!")
-        return redirect('/')
-
-    return render_template("search_results.html", user=user)
+        return render_template('login_form.html')
+     
+    return render_template("search_result.html", first_name=first_name, last_name=last_name )
 
 
 @app.route('/login')
@@ -56,40 +69,69 @@ def login_process():
 
     # 2. call db and get matching record
     #user = User.query.filter_by(email='peter').first()
-    #user = User.query.filter_by(email='ninja@hackbrightacademy.com').first()
+    #user = User.query.filter_by(email='test2@test.com').first()
     user = User.query.filter_by(email=email).first()
-    print user
+    #return   user
     # user.password = 1
     
+    #return "DEBUG: another test"
+    
     #3. handle use cases for record matched or not
-    if not user:
-        print "test"
+    if not user:  
+        #return "DEBUG: no User  "
+    
         flash('User not found!')
-        return redirect('/login')
-    elif password == str(user.password):
-        print "another test"
+        return render_template("homepage.html")
+    elif email == str(user.email):
+        
+        #return "DEBUG: user found "
+     
+        # set session
         session['user_id'] = user.user_id
-        session['role_id'] = [] 
-        for role in user.roles:
-            session['role_ids'].append(role.name)
+        session['email'] = user.email
+        session['password'] = user.password
+        session['first_name'] = user.fname
+        session['last_name'] = user.lname
+        session['role_id'] = user.role_id
+        
+        # for role in user.roles:
+        #     session['role_ids'].append(role.name)
+        #flash('User: {} has been logged in!'.format(email).format(email).format(email).format(email) )
+        # Render logedin page for user role_id
+        #return session['role_id']
 
-        flash('User: {} has been logged in!'.format(email))
-        return redirect('/homepage')
-    # else:
-    #     flash('Password does not match!')
-
-    return render_template('login_form.html')
+        if session['role_id']== '1':
+            #return session['role_id']
+            return render_template('dashboard_view_1.html')       # role_id = 1
+        if  session['role_id'] == '2':
+            #return session['role_id']
+            return render_template('dashboard_view_2.html')       # role_id = 2
+        if  session['role_id'] == '3':
+            #return session['role_id']
+            return render_template('dashboard_view_3.html')       # role_id = 3
+        if  session['role_id']== '4': 
+            #return session['role_id'] 
+            return render_template('dashboard_view_4.html')       # role_id = 4
+       
+       
+    else:
+        flash('Password does not match!')
+        return render_template('login_form.html')
 
 
 @app.route('/logout')
 def logout():
     """Logs a user out"""
-    return 'a logout'
+    #return 'a logout'
 
-    # del session['user_id']
-    flash('User has been logged out')
-        
-    return render_template('homepage.html')
+    if (session['user_id'] != None):
+        if session['user_id'] == True:
+            del session['user_id']
+            flash('User has been logged out')
+            return render_template('homepage.html')
+    else:
+        return render_template('homepage.html')
+
 
 @app.route('/show_user')
 def show_user():
@@ -118,11 +160,6 @@ def dashboard():
     user = User.query.filter_by(user_id=user_id).first()
 
     if 'admin' in roles:
-    #   show admin dashboard, passing in data
-    #if the role is customer
-    #   find quotes, projects, invoices
-    #   show the customer dash, pass in data
-    # ... same for estimator, staff
         return render_template('templates/dashboard.html', page=page)
 
 
@@ -211,60 +248,6 @@ def add_customer_to_db():
     return render_template('create_new_user.html', page=page)
 
 
-# @app.route('/customers', methods=["POST"])
-# def show_customer():
-#     page='show_customer'
-#     if request.method == "POST":
-
-
-#         @app.route('/Create_Invoice/', methods = ['GET', 'POST'])
-#         def create_invoice():
-#             task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
-
-#         if (task == 'n'):
-#             product_list = []
-#             quantity = []
-#             product_price = []
-    
-#     while True:
-#         product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
-#                          "to quit: ")
-#         if (product_number == 'q'):
-#             print("\nQuitting ...\n")
-#             break
-#         if (len(product_number) != 8): 
-#             print("\nInvalid product number, please try again.")
-#         else:
-#             with open("product_list.txt") as products:
-#                 for line in products:
-#                     if product_number in line:
-#                         single_product = line.split(" ")
-#                         quantity = input("\nQuantity of the product " +
-#                                          "to be purchased: ")
-#                         code = single_product[0]
-#                         product_name = single_product[1]
-#                         price = float(single_product[2])
-#                         total = (price) * int(quantity)
-#                         product_list.append(product_name)
-#                         quantity.append(quantity)
-#                         product_price.append(total)
-#                         break
-#     print ("Your invoice: ")
-#     for i in range(len(product_list)):
-#         print ('\single_product', quantity[i], product_list[i],' for the ' +
-#               'amount of $', product_price[i])
-#     print ("Your total: $ ", sum(product_price))                   
-#     if (task == "q"):
-#         sys.exit()
-
-#         db.session.add(invoice)
-#         db.session.commit()
-#         return redirect(url_for('show_invoice'))
-
-#     return render_template("create_invoice.html")
-
-# app.jinja_env.globals.update(Create_Invoice="create_invoice.html")
-
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):
     return 'a string'
@@ -316,12 +299,37 @@ def new_quote():
 def new_invoice():
     invoice_number = request.form['invoice_number']
     invoice_id=()
-# #     # product_number
-# #     # purchase_order_number
-# #     # status
-# #     # in_stock
-# #     # in_stock_date
-# #     created_date = (request.form['date_received']),
+
+    page = 'create_invoice'
+    #can i set one of the separate to import existing customer
+    #or to create a relationship that will link customer, staff, job, etc
+    name = request.form.get('name')
+    description = request.form.get('description')
+    job_id = request.form.get('job_id')
+    invoice_created_date = datetime.datetime.now()
+    invoice_due_date = datetime.datetime()
+    phone = request.form.get('phone')
+    location_address1 = request.form.get('address1')
+    location_address2= request.form.get('address2')
+    location_city = request.form.get('city')
+    location_state = request.form.get('state')
+    company = request.form.get('company')
+    date_paid = request.form.get('date_paid')
+    date_sent = request.form.get('date_sent')
+
+  
+    invoice = Invoice(name=name, description=description,job_id=job_id, location_address1=address1, location_address2=location_address2, 
+                        location_city=city, location_state=location_state, company=company)
+   
+    db.session.add(customer)
+   
+    db.session.commit()
+    
+    flash("Invoice created successfully!!!")
+
+    return redirect(url_for('/')) #DASHBOARD??????
+    
+    return render_template('create_invoice.html', page=page)
 
 
 
