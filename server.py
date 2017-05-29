@@ -24,7 +24,7 @@ def root():
 def index():
     """Homepage."""
 
-    return render_template("homepage.html")
+    return render_template("index.html")
 
 
 @app.route('/search')
@@ -88,30 +88,29 @@ def login_process():
      
         # set session
         session['user_id'] = user.user_id
-        session['email'] = user.email
-        session['password'] = user.password
-        session['first_name'] = user.fname
-        session['last_name'] = user.lname
-        session['role_id'] = user.role_id
+        session['role_ids'] = []
         
-        # for role in user.roles:
-        #     session['role_ids'].append(role.name)
-        #flash('User: {} has been logged in!'.format(email).format(email).format(email).format(email) )
-        # Render logedin page for user role_id
-        #return session['role_id']
+        for role in user.roles:
+            session['role_ids'].append(role.role_id)
+        flash('User: {} has been logged in!'.format(email).format(email).format(email).format(email) )
 
-        if session['role_id']== '1':
-            #return session['role_id']
-            return render_template('dashboard_view_1.html')       # role_id = 1
-        if  session['role_id'] == '2':
-            #return session['role_id']
-            return render_template('dashboard_view_2.html')       # role_id = 2
-        if  session['role_id'] == '3':
-            #return session['role_id']
-            return render_template('dashboard_view_3.html')       # role_id = 3
-        if  session['role_id']== '4': 
-            #return session['role_id'] 
-            return render_template('dashboard_view_4.html')       # role_id = 4
+        # Role ID 3 is a customer
+        if  3 in session['role_ids']:
+            ##TODO:query all customer jobs filter_by(customer_id=user.user_id), pass into render template
+            return render_template('index.html', current_user=user)       # role_id = 3
+        # Role ID 1 is admin
+        if  1 in session['role_ids']:
+        ##### TODO: Query database for: count of users, count of jobs, count of products, count of jobs with status = "invoice"
+        ##### render templates all queries once completed FOR ADMIN
+            return render_template('index.html', current_user=user)       # role_id = 1
+        # Role ID  2 is Estimator
+        if  2 in session['role_ids']:
+            ###TODO query total of all jobs filter_by(user_id=user.user_id)
+            return render_template('index.html', current_user=user)       # role_id = 2
+        
+        # if  session['role_id']== '4': 
+        #     #return session['role_id'] 
+        #     return render_template('dashboard_view_4.html')       # role_id = 4
        
        
     else:

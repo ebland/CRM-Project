@@ -116,7 +116,7 @@ class Job(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     total = db.Column(db.Float(precision=10, decimal_return_scale=2, asdecimal=True))
     product_id = db.Column(db.ForeignKey('product.product_id'))
-    customer_id = db.Column(db.ForeignKey('customer.customer_id'))
+    customer_id = db.Column(db.ForeignKey('users.user_id'))
     # quote_id = db.Column(db.Integer(11), db.ForeignKey('quotes.quote_id'))
     # total_net_amount = db.Column(db.Integer(5), db.ForeignKey(total_net_amount.c_total_net_amount(10,2)))
     # staff_total_amount = db.Column(db.Integer(5), db.ForeignKey(staff_total_amount.c_staff_total_amount(10,2)))
@@ -141,77 +141,77 @@ class Job(db.Model):
 
 # ----------------------
 
-class Invoice(db.Model):
+# class Invoice(db.Model):
 
-    __tablename__="invoice"
+#     __tablename__="invoice"
 
-    invoice_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    # customer_id = db.Column(db.Integer) 
-    name = db.Column(db.String(90), nullable=False)
-    description = db.Column(db.String(255), nullable=True)
-    module_abbreviation =db.Column(db.String(4), nullable=True)
-    invoice_created_date = db.Column(db.DateTime())
-    invoice_due_date = db.Column(db.DateTime())
-    job_id = db.Column(db.String(11))
-    date_paid = db.Column(db.String(11))
-    date_sent = db.Column(db.String(11))
-    product_quantity = db.Column(db.Integer())
-    active = db.Column(db.String(11))
+#     invoice_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     # customer_id = db.Column(db.Integer) 
+#     name = db.Column(db.String(90), nullable=False)
+#     description = db.Column(db.String(255), nullable=True)
+#     module_abbreviation =db.Column(db.String(4), nullable=True)
+#     invoice_created_date = db.Column(db.DateTime())
+#     invoice_due_date = db.Column(db.DateTime())
+#     job_id = db.Column(db.String(11))
+#     date_paid = db.Column(db.String(11))
+#     date_sent = db.Column(db.String(11))
+#     product_quantity = db.Column(db.Integer())
+#     active = db.Column(db.String(11))
 
-    #need to fix these relationships
+#     #need to fix these relationships
 
-    # update_user_id = db.Column(db.Integer(11), nullable=True)
-    # create_user_id=db.Column(db.Integer(11), nullable=False)
-    # customer_id = db.Column(db.Integer(11), db.ForeignKey('customer.customer_id'))
-    # customers = db.relationship('Customer', backref=db.backref('invoice'))
-    # user_id=db.Column(db.Integer())
-    # return render_template('invoice.html')
+#     # update_user_id = db.Column(db.Integer(11), nullable=True)
+#     # create_user_id=db.Column(db.Integer(11), nullable=False)
+#     # customer_id = db.Column(db.Integer(11), db.ForeignKey('customer.customer_id'))
+#     # customers = db.relationship('Customer', backref=db.backref('invoice'))
+#     # user_id=db.Column(db.Integer())
+#     # return render_template('invoice.html')
 
 
-class Invoice_Detail(db.Model):
+# class Invoice_Detail(db.Model):
 
-    __tablename__="invoice_detail"
+#     __tablename__="invoice_detail"
 
-    invoice_detail_id = db.Column(db.Integer, primary_key=True)
-    purchase_order_number = db.Column(db.Unicode(50))
-    created_at = db.Column(db.DateTime())
-    modified = db.Column(db.DateTime())
+#     invoice_detail_id = db.Column(db.Integer, primary_key=True)
+#     purchase_order_number = db.Column(db.Unicode(50))
+#     created_at = db.Column(db.DateTime())
+#     modified = db.Column(db.DateTime())
 
-    invoice = db.relationship('invoice', back_populates='products')
-    product = db.relationship('product', back_populates='invoices')
+#     invoice = db.relationship('invoice', back_populates='products')
+#     product = db.relationship('product', back_populates='invoices')
     # invoice_number = db.Column(db.Unicode(50), db.ForeignKey('invoice.invoice_id'))
     # product_number = db.Column(db.Unicode(50), db.ForeignKey('product.product_id'))
 
-class Customer(db.Model):
+# class Customer(db.Model):
 
-    __tablename__='customer'
+#     __tablename__='customer'
 
-    customer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    customer_status = db.Column(db.Integer())
-    created = db.Column(db.DateTime())
-    modified = db.Column(db.DateTime())
-    email = db.Column(db.String(60), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-    # Information
-    fname = db.Column(db.String(50), nullable=True)
-    lname = db.Column(db.String(50), nullable=False)
-    phone = db.Column(db.String(30), nullable=True)
-    phone2 = db.Column(db.String(30), nullable=True)
-    company = db.Column(db.String(40), nullable=True)
-    # Address
-    address1 = db.Column(db.String(255), nullable=True)
-    address2 = db.Column(db.String(255), nullable=True)
-    city = db.Column(db.String(100), nullable=True)
-    state = db.Column(db.String(20), nullable=True)
-    zip_code = db.Column(db.String(10), nullable=True)
-    module_abbreviation =db.Column(db.String(4), nullable=True)
+#     customer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+#     customer_status = db.Column(db.Integer())
+#     created = db.Column(db.DateTime())
+#     modified = db.Column(db.DateTime())
+#     email = db.Column(db.String(60), unique=True, nullable=False)
+#     password = db.Column(db.String(50), nullable=False)
+#     # Information
+#     fname = db.Column(db.String(50), nullable=True)
+#     lname = db.Column(db.String(50), nullable=False)
+#     phone = db.Column(db.String(30), nullable=True)
+#     phone2 = db.Column(db.String(30), nullable=True)
+#     company = db.Column(db.String(40), nullable=True)
+#     # Address
+#     address1 = db.Column(db.String(255), nullable=True)
+#     address2 = db.Column(db.String(255), nullable=True)
+#     city = db.Column(db.String(100), nullable=True)
+#     state = db.Column(db.String(20), nullable=True)
+#     zip_code = db.Column(db.String(10), nullable=True)
+#     module_abbreviation =db.Column(db.String(4), nullable=True)
 
-    ######STATUS#######
-    active = db.Column(db.Boolean())
-    ######STATUS#######
+#     ######STATUS#######
+#     active = db.Column(db.Boolean())
+#     ######STATUS#######
 
-    created_at = db.Column(db.DateTime())
-    modified = db.Column(db.DateTime())
+#     created_at = db.Column(db.DateTime())
+#     modified = db.Column(db.DateTime())
     # user_id = db.Column(db.Integer())
     
         # return render_template('show_user.html')
