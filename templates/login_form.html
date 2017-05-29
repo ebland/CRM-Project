@@ -1,42 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class='modal fade' id='LoginForm' tabindex='-1' role='dialog' aria-labelledby='LoginForm'>
+<!-- <div class='modal fade' id='LoginForm' tabindex='-1' role='dialog' aria-labelledby='LoginForm'>
       <div class='modal-dialog' role='document'>
         <div class='modal-content'>
           <div class='modal-header'>
             <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
             <h4 class='modal-title' id='LoginForm-Title'>Login</h4>
           </div>
-<div class="modal-body" align="left">
-    <div class="form-group">
-        <form action='/login_process' id='login_form' role='form' method='POST'>
+<div class="modal-body" align="left"> -->
+    <!-- <div class="form-group"> -->
+        <form action='/login_process' id='login_form' method='POST'>
         <label for="email">Username/Email</label>
-            <input type='email' name='email' {{ login_form.email(placeholder=login_form.email.render_kw['placeholder'], class="form-control") }}required>
-                <span class="error">
-                    {% if login_form.email.errors %}
-                        {% for error in login_form.email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    {% endif %}
-                </span>
+            <input type='email' name='email' required>
+                <!-- <span class="error">
+                </span -->>
         <div>
-    <div class="form-group">
+    <!-- <div class="form-group"> -->
         <label for="password">Password</label>
-                <p><input type='password' name='password' {{ login_form.password(placeholder=login_form.password.render_kw['placeholder'], class="form-control") }} required>
-                    <span class="error">
-                      {% if login_form.password.errors %}
-                        {% for error in login_form.password.errors %}
-                          {{ error }}
-                        {% endfor %}
-                      {% endif %}
+                <p><input type='password' name='password' required>
+                    <!-- <span class="error"> -->
+                     
                     </span>
                   </p>
               </div>
-              <div class="checkbox">
-                <label for="remember_me">{{ login_form.remember_me }} Remember Me</label>
-              </div>
-
+              
             <label>Account Email:
             </label>
         </div>
@@ -50,11 +38,11 @@
             
         </div>
         </form>
-    <div class="modal-footer">
+    <!-- <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="submit" value='Log In' class="btn btn-primary">Login</button>
             </div>
-          </form>
+          </form> -->
 
         </div>
       </div>

@@ -162,9 +162,7 @@ def new_user():
         city = request.form.get('city')
         state = request.form.get('state')
   
-        user = User(fname=fname, lname=lname, zip_code=zip_code, email=email, created_at=created_date,
-                        password=password, phone=phone, phone2=phone2, 
-                        address1=address1, address2=address2, city=city, state=state)
+        user = User(fname=fname, lname=lname, zip_code=zip_code, email=email, created_at=created_date, password=password, phone=phone, phone2=phone2, address1=address1, address2=address2, city=city, state=state)
 
         db.session.add(user)
    
@@ -213,59 +211,59 @@ def add_customer_to_db():
     return render_template('create_new_user.html', page=page)
 
 
-@app.route('/customers', methods=["POST"])
-def show_customer():
-    page='show_customer'
-    if request.method == "POST":
+# @app.route('/customers', methods=["POST"])
+# def show_customer():
+#     page='show_customer'
+#     if request.method == "POST":
 
 
-        @app.route('/Create_Invoice/', methods = ['GET', 'POST'])
-        def create_invoice():
-            task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
+#         @app.route('/Create_Invoice/', methods = ['GET', 'POST'])
+#         def create_invoice():
+#             task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
 
-        if (task == 'n'):
-            product_list = []
-            quantity = []
-            product_price = []
+#         if (task == 'n'):
+#             product_list = []
+#             quantity = []
+#             product_price = []
     
-    while True:
-        product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
-                         "to quit: ")
-        if (product_number == 'q'):
-            print("\nQuitting ...\n")
-            break
-        if (len(product_number) != 8): 
-            print("\nInvalid product number, please try again.")
-        else:
-            with open("product_list.txt") as products:
-                for line in products:
-                    if product_number in line:
-                        single_product = line.split(" ")
-                        quantity = input("\nQuantity of the product " +
-                                         "to be purchased: ")
-                        code = single_product[0]
-                        product_name = single_product[1]
-                        price = float(single_product[2])
-                        total = (price) * int(quantity)
-                        product_list.append(product_name)
-                        quantity.append(quantity)
-                        product_price.append(total)
-                        break
-    print ("Your invoice: ")
-    for i in range(len(product_list)):
-        print ('\single_product', quantity[i], product_list[i],' for the ' +
-              'amount of $', product_price[i])
-    print ("Your total: $ ", sum(product_price))                   
-    if (task == "q"):
-        sys.exit()
+#     while True:
+#         product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
+#                          "to quit: ")
+#         if (product_number == 'q'):
+#             print("\nQuitting ...\n")
+#             break
+#         if (len(product_number) != 8): 
+#             print("\nInvalid product number, please try again.")
+#         else:
+#             with open("product_list.txt") as products:
+#                 for line in products:
+#                     if product_number in line:
+#                         single_product = line.split(" ")
+#                         quantity = input("\nQuantity of the product " +
+#                                          "to be purchased: ")
+#                         code = single_product[0]
+#                         product_name = single_product[1]
+#                         price = float(single_product[2])
+#                         total = (price) * int(quantity)
+#                         product_list.append(product_name)
+#                         quantity.append(quantity)
+#                         product_price.append(total)
+#                         break
+#     print ("Your invoice: ")
+#     for i in range(len(product_list)):
+#         print ('\single_product', quantity[i], product_list[i],' for the ' +
+#               'amount of $', product_price[i])
+#     print ("Your total: $ ", sum(product_price))                   
+#     if (task == "q"):
+#         sys.exit()
 
-        db.session.add(invoice)
-        db.session.commit()
-        return redirect(url_for('show_invoice'))
+#         db.session.add(invoice)
+#         db.session.commit()
+#         return redirect(url_for('show_invoice'))
 
-    return render_template("create_invoice.html")
+#     return render_template("create_invoice.html")
 
-app.jinja_env.globals.update(Create_Invoice="create_invoice.html")
+# app.jinja_env.globals.update(Create_Invoice="create_invoice.html")
 
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):

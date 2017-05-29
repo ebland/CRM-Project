@@ -88,7 +88,7 @@ class Product(db.Model):
     modified = db.Column(db.DateTime())
     module_abbreviation =db.Column(db.String(4), nullable=True)
     jobs = db.relationship('Job', backref=db.backref('product', lazy='joined'), secondary='job_product')
-    # , db.ForeignKey('invoice.product_number'), nullable=False, unique=True)
+   
     
 
 class Job_Product(db.Model):
@@ -107,18 +107,20 @@ class Job(db.Model):
     __tablename__="jobs"
 
     job_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    customer_id = db.Column(db.ForeignKey('customer.customer_id'))
-    # product_quantity=db.Column(db.Integer(2), nullable=False)
+    quantity = db.Column(db.Integer(), nullable=True)
     module_abbreviation = db.Column(db.String(4), nullable=True)
-    # quote_id = db.Column(db.Integer(11), db.ForeignKey('quotes.quote_id'))
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     total = db.Column(db.Float(precision=10, decimal_return_scale=2, asdecimal=True))
     product_id = db.Column(db.ForeignKey('product.product_id'))
-    # c_total_net_amount = db.Column(db.Integer(5), db.ForeignKey(c_total_net_amount.c_total_net_amount(10,2)))
-    # c_staff_total_amount = db.Column(db.Integer(5), db.ForeignKey(c_staff_total_amount.c_staff_total_amount(10,2)))
+    customer_id = db.Column(db.ForeignKey('customer.customer_id'))
+    # quote_id = db.Column(db.Integer(11), db.ForeignKey('quotes.quote_id'))
+    # total_net_amount = db.Column(db.Integer(5), db.ForeignKey(total_net_amount.c_total_net_amount(10,2)))
+    # staff_total_amount = db.Column(db.Integer(5), db.ForeignKey(staff_total_amount.c_staff_total_amount(10,2)))
+    
+    #Leslie, I want these to be updated with information about job adds and edits to update it underneath the user
     # update_user_id = db.Column(db.Integer(11), nullable=True)
     # create_user_id = db.Column(db.Integer(11), nullable=False)
 
@@ -143,8 +145,8 @@ class Invoice(db.Model):
     __tablename__="invoice"
 
     invoice_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.customer_id')) 
-    user_id=db.Column(db.Integer(), db.ForeignKey('users.user_id'))
+    customer_id = db.Column(db.Integer) 
+    # user_id=db.Column(db.Integer())
     name = db.Column(db.String(90), nullable=False)
     description = db.Column(db.String(255), nullable=True)
     module_abbreviation =db.Column(db.String(4), nullable=True)
