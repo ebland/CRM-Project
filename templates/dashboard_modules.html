@@ -5,17 +5,17 @@
               <div class="small-box bg-aqua">
                 <div class="inner">
                   <h3>
-                    23
+                    {{ session['user_count'] }}
                   </h3>
                   <p>
-                    User Management
+                    Users
                   </p>
                 </div>
                 <div class="icon">
                   <i class="ion ion-bag"></i>
                 </div>
                 <a href="/all_users.html" class="small-box-footer">
-                  User List <i class="fa fa-arrow-circle-right"></i>
+                  User Management <i class="fa fa-arrow-circle-right"></i>
                 </a>
               </div>
             </div>
@@ -24,7 +24,7 @@
               <div class="small-box bg-green">
                 <div class="inner">
                   <h3>
-                    11<sup style="font-size: 20px">%</sup>
+                    {{ session['job_count'] }}
                   </h3>
                   <p>
                     Jobs
@@ -43,7 +43,7 @@
               <div class="small-box bg-yellow">
                 <div class="inner">
                   <h3>
-                    162
+                    {{ session['customer_job_count'] }}
                   </h3>
                   <p>
                     User Registrations

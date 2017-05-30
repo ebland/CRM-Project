@@ -4,7 +4,7 @@ import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session
-from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product, Invoice
+from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Invoice, Product
 
 app = Flask(__name__)
 
@@ -67,15 +67,12 @@ def login_process():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    # 2. call db and get matching record
-    #user = User.query.filter_by(email='peter').first()
-    #user = User.query.filter_by(email='test2@test.com').first()
+    # 2a get counts
     user = User.query.filter_by(email=email).first()
-    #return   user
-    # user.password = 1
-    
-    #return "DEBUG: another test"
-    
+    customerjobcount = Job.query.filter(Job.customer_id == user.user_id).count()
+    usercount = User.query.filter(User.user_id > 1).count()
+    jobcount = Job.query.filter(Job.job_id > 1 ).count()
+   
     #3. handle use cases for record matched or not
     if not user:  
         #return "DEBUG: no User  "
@@ -83,12 +80,14 @@ def login_process():
         flash('User not found!')
         return render_template("homepage.html")
     elif email == str(user.email):
-        
-        #return "DEBUG: user found "
      
         # set session
         session['user_id'] = user.user_id
         session['role_ids'] = []
+        #3a set session
+        session['customer_job_count'] = str(customerjobcount)
+        session['user_count'] = str(usercount)
+        session['job_count'] = str(jobcount)
         
         for role in user.roles:
             session['role_ids'].append(role.role_id)
@@ -96,16 +95,20 @@ def login_process():
 
         # Role ID 3 is a customer
         if  3 in session['role_ids']:
+            user = User.query.filter_by(email=email).first()
             jobs = Job.query.filter_by(customer_id=user.user_id).all()  
             return render_template('index.html', current_user=user, jobs=jobs)      
         # Role ID 1 is admin
         if  1 in session['role_ids']:
-        ##### TODO: Query database for: count of users, count of jobs, count of products, count of jobs with status = "invoice"
-        ##### render templates all queries once completed FOR ADMIN
+            user = User.query.filter_by(email=email).first()
+            jobs = Job.query.filter_by(customer_id=user.user_id).all()
+            users = User.query.filter_by(email=email).all()
+            # products = Product.query.filter_by(product_number=product_number).all()
             return render_template('index.html', current_user=user)       # role_id = 1
         # Role ID  2 is Estimator
         if  2 in session['role_ids']:
-            ###TODO query total of all jobs filter_by(user_id=user.user_id)
+            user = User.query.filter_by(email=email).first()
+            jobs = Job.query.filter_by(customer_id=user.user_id).all()
             return render_template('index.html', current_user=user)       # role_id = 2
         
         # if  session['role_id']== '4': 
@@ -166,9 +169,9 @@ def dashboard():
 def user_list():
     """Show List of All Users is ECRM."""
     
-    user = User.query.get(user_id)
+    user = User.query.filter(User.user_id > 1 ).all()
 
-    return render_template("templates/all_users.html", user=user)
+    return render_template("all_users.html", user=user)
 
 
 @app.route('/create_new_user')

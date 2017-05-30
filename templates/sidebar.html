@@ -1,17 +1,17 @@
         
         <section class="sidebar">
 
-{#         <!-- {% if logged_in == True %} -->#}
-{#          <div class="user-panel">#}
-{#              <div class="pull-left image">#}
-{#                <img src="avatar-liz-color.png" class="img-circle" alt="User Image">#}
-{#              </div>#}
-{#              <div class="pull-left info">#}
-{#                <p>User Name</p>#}
-{##}
-{#                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>#}
-{#              </div>#}
-{#          </div>#}
+
+          <div class="user-panel">
+              <div class="pull-left image">
+                <img src="avatar-liz-color.png" class="img-circle" alt="avatar ecrm">
+              </div>
+              <div class="pull-left info">
+                <p>User Name</p>
+
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              </div>
+          </div>
 
           <!-- Search Form -->
          
@@ -27,7 +27,7 @@
 
         
           <ul class="sidebar-menu">
-{#            <li class="header"></li><li class="header"></li>#}
+            <li class="header"></li><li class="header"></li>
 
             <li><a href="{{ url_for('root_path') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 
@@ -70,7 +70,7 @@
 
 
             {# Modules #}
-            <!-- {% if logged_in == True %}<li class="header"></li>{% endif %} -->
+            
 
             <li class="treeview">
               <a href="#"><i class="fa fa-fort-awesome"></i> <span>Create Invoice</span> <i class="fa fa-angle-left pull-right"></i></a>
@@ -111,7 +111,7 @@
             </li>
             
 
-          <!-- {% if app_config_settings['Toggle Placeholders'] == 'true' %} -->
+         
             
             <li class="treeview">
               <a href="#"><i class="fa fa-bar-chart"></i> <span>Invoices</span> <i class="fa fa-angle-left pull-right"></i></a>
