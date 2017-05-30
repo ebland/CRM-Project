@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% block content %}
+  
+  <h1>Invoices <a href="{{ url_for('invoice.create_invoice') }}" class='btn btn-mini btn-primary'>New invoice</a></h1>
+
+  {% if invoices|length == 0 %}
+    
+    <p class="first-create">You haven't created any invoices yet. <a href="{{ url_for('.create_invoice') }}">Get started</a></p>
+    
+  {% else %}
+    <div class="workspace-inner">
+    <table class="table table-striped table-hover data-list invoice-data-list">
+      <thead class="data-list-header">
+        <td class="col due">Due date</td>
+        <td class="col ref">Invoice Number</td>
+        <td class="col name">Customer</td>
+        <td class="col total">Total</td>
+      </thead>
+     <tbody>
+      {% for invoice in invoices %}
+          <tr class="clickable" data-id="{{ invoice.id }}">
+            <td class="col due">{{ invoice.due_date.strftime('%d %B %Y') }}</td>
+            <td class="col ref">{{ invoice.invoice_number }}</td>
+            <td class="col name">{{ invoice.customer.lname, invoice.customer.fname() }} <br></td>
+            <td class="col total"><span class='currency-code'>{{ invoice.currency_code }}</span> {{ invoice.total|format_currency }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('table.data-list > tbody > tr').on('click', function(evt) {
+        var el = $(this);
+        window.location = '/invoice/' + el.data('id');
+      });
+    });
+  </script>
+
+{% endblock %}

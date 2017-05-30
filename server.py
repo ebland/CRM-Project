@@ -4,7 +4,7 @@ import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session
-from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product
+from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product, Invoice
 
 app = Flask(__name__)
 
@@ -96,8 +96,8 @@ def login_process():
 
         # Role ID 3 is a customer
         if  3 in session['role_ids']:
-            ##TODO:query all customer jobs filter_by(customer_id=user.user_id), pass into render template
-            return render_template('index.html', current_user=user)       # role_id = 3
+            jobs = Job.query.filter_by(customer_id=user.user_id).all()  
+            return render_template('index.html', current_user=user, jobs=jobs)      
         # Role ID 1 is admin
         if  1 in session['role_ids']:
         ##### TODO: Query database for: count of users, count of jobs, count of products, count of jobs with status = "invoice"
@@ -206,7 +206,7 @@ def new_user():
   
         flash("User was addded successfully!!!")
         
-        return redirect('/homepage')
+        return redirect('/dashboard')
 
     else:
         return render_template('create_new_user.html')
@@ -294,11 +294,12 @@ def new_quote():
 # @app.route('/all_invoices/', methods=['POST'])
 
 
-@app.route('/create_invoice/', methods=["GET", "POST"])
+@app.route('/create_new_invoice/', methods=["GET", "POST"])
 def new_invoice():
-    invoice_number = request.form['invoice_number']
+    # invoice=invoice_id
+    # invoice_number = request.form['invoice_number']
+    
     invoice_id=()
-
     page = 'create_invoice'
     #can i set one of the separate to import existing customer
     #or to create a relationship that will link customer, staff, job, etc
@@ -306,31 +307,75 @@ def new_invoice():
     description = request.form.get('description')
     job_id = request.form.get('job_id')
     invoice_created_date = datetime.datetime.now()
-    invoice_due_date = datetime.datetime()
+    # invoice_due_date = datetime.datetime()
     phone = request.form.get('phone')
-    location_address1 = request.form.get('address1')
-    location_address2= request.form.get('address2')
+    location_address1 = request.form.get('location_address1')
+    location_address2= request.form.get('location_address2')
     location_city = request.form.get('city')
     location_state = request.form.get('state')
-    company = request.form.get('company')
+    # company = request.form.get('company')
     date_paid = request.form.get('date_paid')
     date_sent = request.form.get('date_sent')
-
+    # invoice = db.relationship('invoice')
   
-    invoice = Invoice(name=name, description=description,job_id=job_id, location_address1=address1, location_address2=location_address2, 
-                        location_city=city, location_state=location_state, company=company)
+    invoice = Invoice(name=name, description=description,job_id=job_id, 
+                     location_address1=location_address1, location_address2=location_address2, location_city=location_city, location_state=location_state)
    
-    db.session.add(customer)
+    db.session.add(invoice)
    
     db.session.commit()
     
     flash("Invoice created successfully!!!")
 
-    return redirect(url_for('/')) #DASHBOARD??????
+    return redirect(url_for('create_invoice', create_invoice=create_invoice)) #DASHBOARD??????
     
     return render_template('create_invoice.html', page=page)
 
+@app.route('/create_invoice/', methods = ['GET', 'POST'])
+def create_invoice():
+    task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
 
+    if (task == 'n'):
+        product_list = []
+        quantity = []
+        product_price = []
+    
+    while True:
+        product_number = raw_input("\nEnter the 8 digit item code. Or press 'q' " + 
+                         "to quit: ")
+        if (product_number == 'q'):
+            print("\nQuitting ...\n")
+            break
+        if (len(product_number) != 8): 
+            print("\nInvalid product number, please try again.")
+        else:
+            with open("product_list.txt") as products:
+                for line in products:
+                    if product_number in line:
+                        single_product = line.split(" ")
+                        quantity = input("\nQuantity of the product " +
+                                         "to be purchased: ")
+                        code = single_product[0]
+                        product_name = single_product[1]
+                        price = float(single_product[2])
+                        total = (price) * int(quantity)
+                        product_list.append(product_name)
+                        quantity.append(quantity)
+                        product_price.append(total)
+                        break
+    print ("Your invoice: ")
+    for i in range(len(product_list)):
+        print ('\single_product', quantity[i], product_list[i],' for the ' +
+              'amount of $', product_price[i])
+    print ("Your total: $ ", sum(product_price))                   
+    if (task == "q"):
+        sys.exit()
+
+        db.session.add(invoice)
+        db.session.commit()
+        return redirect(url_for('show_invoice'))
+
+    return render_template("create_invoice.html")
 
 if __name__ == "__main__":
     app.debug = True

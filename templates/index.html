@@ -37,5 +37,11 @@
       <li><a>Staff Management</a></li>
     </ul>
 
+{% if "user_id" in session and 3 in session["role_ids"]%}
+{% for job in jobs %}
+{{ job.name }}
+{% endfor %}
+{% endif %}
+
 
 {% endblock content %}
