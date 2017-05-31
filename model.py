@@ -11,7 +11,7 @@ class User(db.Model):
 
     __tablename__="users"
 
-    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True, unique=True)
+    user_id = db.Column(db.Integer(), autoincrement=True, primary_key=True, unique=True)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.String(2), nullable=True)
@@ -100,8 +100,9 @@ class Job(db.Model):
     module_abbreviation = db.Column(db.String(4), nullable=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    customer_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    job_location = db.Column(db.String(100))
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.user_id'))
+    customer_id = db.Column(db.Integer(), db.ForeignKey('users.user_id'))
     total = db.Column(db.Float(precision=10, decimal_return_scale=2, asdecimal=True))
 
     # quote_id = db.Column(db.Integer(11), db.ForeignKey('quotes.quote_id'))
@@ -114,7 +115,7 @@ class Job(db.Model):
 
     ######STATUS#######
     active = db.Column(db.Boolean())
-    status = db.Column(db.String(11))
+    status = db.Column(db.String(20))
     date_due = db.Column(db.DateTime())
     #####STATUS#####
 
@@ -249,11 +250,11 @@ def seed_data():
     db.session.commit()
 
     job_1=Job(name='project', user_id=user2.user_id, customer_id=user3.user_id, status="active")
-    job_2=Job(name='big project', user_id=user2.user_id, customer_id=user3.user_id)
-    job_3=Job(name='small project', user_id=user2.user_id, customer_id=user3.user_id)
-    job_4=Job(name='bigger project', user_id=user2.user_id, customer_id=user3.user_id)
-    job_5=Job(name='biggest project', user_id=user2.user_id, customer_id=user3.user_id)
-    job_6=Job(name='smallest project', user_id=user2.user_id, customer_id=user3.user_id)
+    job_2=Job(name='big project', user_id=user2.user_id, customer_id=user3.user_id, status="quote_sent")
+    job_3=Job(name='small project', user_id=user2.user_id, customer_id=user3.user_id, status="quote_requested")
+    job_4=Job(name='bigger project', user_id=user2.user_id, customer_id=user3.user_id, status="invoice_sent")
+    job_5=Job(name='biggest project', user_id=user2.user_id, customer_id=user3.user_id, status="completed")
+    job_6=Job(name='smallest project', user_id=user2.user_id, customer_id=user3.user_id, status="active")
 
     db.session.add_all([job_1, job_2, job_3, job_4, job_5, job_6])
     db.session.commit()

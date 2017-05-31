@@ -4,7 +4,7 @@
 
           <div class="user-panel">
               <div class="pull-left image">
-                <img src="avatar-liz-color.png" class="img-circle" alt="avatar ecrm">
+                <img src="http://elizabethblandonline.com/avatar-liz-color.png" class="img-square" alt="avatar ecrm">
               </div>
               <div class="pull-left info">
                 <p>User Name</p>
@@ -23,13 +23,13 @@
                 </span>
               </div>
           </form>
-          {% endif %}
+         
 
         
           <ul class="sidebar-menu">
             <li class="header"></li><li class="header"></li>
 
-            <li><a href="{{ url_for('root_path') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+            <li><a href="/index"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 
             {# Settings #}
             <li class="treeview">
@@ -41,10 +41,10 @@
                   <li class="treeview">
                       <a href="#"><i class="fa fa-cog"></i> <span>Personal Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
                       <ul class="treeview-menu">
-                        <li><a href="{{ url_for('tbd') }}"><i class="fa fa-genderless"></i> <span>Account</span></a></li>
-                        {% if app_config_settings['Toggle Placeholders'] == 'true' %}
-                          <li><a href="{{ url_for('customer_profile') }}"><i class="fa fa-genderless"></i> <span>Profile</span></a></li>
-                        {% endif %}
+                        <li><a href="#"><i class="fa fa-genderless"></i> <span>Account</span></a></li>
+                        
+                          <li><a href="#"><i class="fa fa-genderless"></i> <span>Profile</span></a></li>
+                        
                       </ul>
                   </li>
 
@@ -52,17 +52,17 @@
                   <li class="treeview">
                       <a href="#"><i class="fa fa-cogs"></i> <span>Application Settings</span> <i class="fa fa-angle-left pull-right"></i></a>
                       <ul class="treeview-menu">
-                        <li><a href="{{ url_for('tbd') }}"><i class="fa fa-genderless"></i> <span>User Management</span></a></li>
-                        <li><a href="{{ url_for('tbd') }}"><i class="fa fa-genderless"></i> <span>App Config</span></a></li>
-                        <li><a href="{{ url_for('tbd') }}"><i class="fa fa-genderless"></i> <span>Module Settings</span></a></li>
-                        <li><a href="{{ url_for('all_users') }}"><i class="fa fa-genderless"></i> <span>Users</span></a></li>
+                        <li><a href="#"><i class="fa fa-genderless"></i> <span>User Management</span></a></li>
+                        <li><a href="#"><i class="fa fa-genderless"></i> <span>App Config</span></a></li>
+                        <li><a href="#"><i class="fa fa-genderless"></i> <span>Module Settings</span></a></li>
+                        <li><a href="#"><i class="fa fa-genderless"></i> <span>Users</span></a></li>
                       </ul>
                   </li>
 
                 {# User Settings Group #}
                 
-                  <li><a href="{{ url_for('account_settings') }}"><i class="fa fa-cog"></i> <span>Account</span></a></li>
-                  <li><a href="{{ url_for('show_user') }}"><i class="fa fa-cog"></i> <span>Profile</span></a></li>
+                  <li><a href="#"><i class="fa fa-cog"></i> <span>Account</span></a></li>
+                  <li><a href="#"><i class="fa fa-cog"></i> <span>Profile</span></a></li>
                 
 
               </ul>
@@ -75,13 +75,13 @@
             <li class="treeview">
               <a href="#"><i class="fa fa-fort-awesome"></i> <span>Create Invoice</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
-                <li><a href="{{ url_for('invoice') }}"><i class="fa fa-home"></i> <span>Quotes</span></a></li>
-                <li><a href="{{ url_for('jobs') }}"><i class="fa fa-chevron-circle-right"></i> <span>Jobs</span></a></li>
+                <li><a href="#"><i class="fa fa-home"></i> <span>Quotes</span></a></li>
+                <li><a href="#"><i class="fa fa-chevron-circle-right"></i> <span>Jobs</span></a></li>
                 <!-- {% if logged_in ==['Toggle Placeholders'] == 'true' %} -->
-                  <li><a href="{{ url_for('approved') }}"><i class="fa fa-chevron-circle-right"></i> <span>Approved</span></a></li>
+                  <li><a href="#"><i class="fa fa-chevron-circle-right"></i> <span>Approved</span></a></li>
                 {% endif %}
                
-                  <li><a href="{{ url_for('job_settings') }}"><i class="fa fa-cogs"></i> <span>Job Settings</span></a></li>
+                  <li><a href="#"><i class="fa fa-cogs"></i> <span>Job Settings</span></a></li>
                 
               </ul>
             </li>
@@ -91,10 +91,10 @@
             <li class="treeview">
               <a href="#"><i class="ion-person-stalker"></i> <span>Client Management</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
-                <li><a href="{{ url_for('create_new_user') }}">  <i class="fa fa-home"></i> <span>Create New User</span></a></li>
-                <li><a href="{{ url_for('all_users') }}">  <i class="fa fa-chevron-circle-right"></i> <span>Customer List</span></a></li>
+                <li><a href="#">  <i class="fa fa-home"></i> <span>Create New User</span></a></li>
+                <li><a href="#">  <i class="fa fa-chevron-circle-right"></i> <span>Customer List</span></a></li>
                 
-                  <li><a href="{{ url_for('ecrm_settings') }}"><i class="fa fa-cogs"></i> <span>ECRM Settings</span></a></li>
+                  <li><a href="#"><i class="fa fa-cogs"></i> <span>ECRM Settings</span></a></li>
                 
               </ul>
             </li>
@@ -102,10 +102,10 @@
             <li class="treeview">
               <a href="#"><i class="fa fa-users"></i> <span>Staff</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
-                <li><a href="{{ url_for('staff') }}"><i class="fa fa-home"></i> <span>Staff</span></a></li>
-                <li><a href="{{ url_for('all_users') }}"><i class="fa fa-chevron-circle-right"></i> <span>Staff List</span></a></li>
+                <li><a href="#"><i class="fa fa-home"></i> <span>Staff</span></a></li>
+                <li><a href="#"><i class="fa fa-chevron-circle-right"></i> <span>Staff List</span></a></li>
                 
-                  <li><a href="{{ url_for('staff') }}"><i class="fa fa-cogs"></i> <span>Staff Settings</span></a></li>
+                  <li><a href="#"><i class="fa fa-cogs"></i> <span>Staff Settings</span></a></li>
                 
               </ul>
             </li>
@@ -116,12 +116,12 @@
             <li class="treeview">
               <a href="#"><i class="fa fa-bar-chart"></i> <span>Invoices</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
-                <li><a href="{{ url_for('invoice') }}"><i class="fa fa-home"></i> <span>Invoices</span></a></li>
-                <li><a href="{{ url_for('show_invoices') }}"><i class="fa fa-chevron-circle-right"></i> <span>Open Invoices</span></a></li>
-                <li><a href="{{ url_for('create_new_invoioce') }}"><i class="fa fa-chevron-circle-right"></i> <span>Create New Invoice</span></a></li>
+                <li><a href="#"><i class="fa fa-home"></i> <span>Invoices</span></a></li>
+                <li><a href="#"><i class="fa fa-chevron-circle-right"></i> <span>Open Invoices</span></a></li>
+                <li><a href="#"><i class="fa fa-chevron-circle-right"></i> <span>Create New Invoice</span></a></li>
                 
-                  <li><a href="{{ url_for('invoice_settings') }}"><i class="fa fa-cogs"></i> <span>Invoice Settings</span></a></li>
-                {% endif %}
+                  <li><a href="#"><i class="fa fa-cogs"></i> <span>Invoice Settings</span></a></li>
+                
               </ul>
             </li>
               </ul>

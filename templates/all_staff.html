@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+
+<!-- Content -->
+{% block content_header %}
+  {% include "content_header.html" %} <!-- Content: Header -->
+{% endblock content_header %}
+
+{% block content %}
+  <div page-header>
+    <h4 class="page-header">Human Resources Management System</h4>
+  </div>
+
+     
+    
+
+  <h3 class="content-header">Personnel List</h3>
+
+  <ol class="breadcrumb">
+    <li>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Personnel-Add-Modal">
+          Add New <span class="fa fa-user-plus"></span>
+        </button>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#" data-toggle="modal" data-target="#Personnel-CSV-Upload-Modal"><span class="fa fa-upload"></span>Upload CSV</a></li>
+        </ul>
+      </div>
+    </li>
+  </ol>
+
+  <div>
+    <table class="table">
+      <tr>
+          <th>#</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Phone #</th>
+          <th>E-mail</th>
+          <th>Address</th>
+      </tr>
+      {% for p in personnel %}
+        <tr data-toggle="modal" data-id="{{ p.id }}" data-target="#Personnel-Update-Modal{{ p.id }}">
+          <td>{{ loop.index }}</td>
+          <td>{{ p.name_last }}</td>
+          <td>{{ p.name_first }}</td>
+          <td>{{ p.phone1 }}</td>
+          <td>{{ p.email1 }}</td>
+          <td>{{ p.address_street }}, {% if p.address_suite %}{{ p.address_suite}},  {% endif %}
+              {{ p.address_city }}, {{ p.address_state }} {{ p.address_zip }}
+              {% if p.address_zip_extension %}-{{ p.address_zip_extension }}{% endif %}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+{# -- Legacy Table -- #}
+{#    <table class="table">#}
+{#      <tr>#}
+{#          <th>#</th>#}
+{#          <th>First Name</th>#}
+{#          <th>Last Name</th>#}
+{#          <th>Phone Number</th>#}
+{#      </tr>#}
+{#      {% for key, value in personnel_data.items() %}#}
+{#        <tr data-toggle="modal" data-id="{{ value.id }}" data-target="#Personnel-Update-Modal">#}
+{#          <td>{{ loop.index }}</td>#}
+{#          <td>{{ value.first_name }}</td>#}
+{#          <td>{{ value.last_name }}</td>#}
+{#          <td>{{ key }}</td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
+{#    </table>#}
+  </div>
+
+{%- endblock content %}

@@ -1,29 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Login</h1>
-    <form action="/login_process" method="POST">
-
-        <div>
-            <label>Email:
-                <input type="email" name="email" required>
-            </label>
-        </div>
-
-        <div>
-            <label>Password:
-                <input type="password" name="password" required>
-            </label>
-        </div>
-
-        <div>
-            <input type="submit" value="Log In">
-        </div>
-
-    </form>
-
     <div id="homepage">
-        <form action="/search">
+        <form action="/search_process">
             First Name<br>
             <input type="text" name="fname"><br>
             Last Name<br>
@@ -36,8 +15,8 @@
 
     <h1>ECM Dashboard/Homepage:</h1>
 
-{% if user in session %}
-    {% if 'admin' in session['role_ids'] %}
+{% if "user_id" in session and 3 in session["role_ids"]%}
+
 
     <h2>Users</h2>
 
@@ -53,7 +32,6 @@
 
     <p><a href="/TBD">INVOICES LIST</a></p>
 
-{% endif %}
 
 
 <script type="text/javascript">

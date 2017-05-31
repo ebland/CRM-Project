@@ -15,7 +15,7 @@ app.secret_key = "ABC"
 
     #return render_template('page_not_found.html'), 404
 
-@app.route('/')
+@app.route('/index')
 def root():
 
     return render_template("homepage.html")
@@ -50,7 +50,7 @@ def search_process():
         flash("Customer not found!!!")
         return render_template('login_form.html')
      
-    return render_template("search_result.html", first_name=first_name, last_name=last_name )
+    return render_template("/", first_name=first_name, last_name=last_name )
 
 
 @app.route('/login')
@@ -69,9 +69,7 @@ def login_process():
 
     # 2a get counts
     user = User.query.filter_by(email=email).first()
-    customerjobcount = Job.query.filter(Job.customer_id == user.user_id).count()
-    usercount = User.query.filter(User.user_id > 1).count()
-    jobcount = Job.query.filter(Job.job_id > 1 ).count()
+
    
     #3. handle use cases for record matched or not
     if not user:  
@@ -84,41 +82,47 @@ def login_process():
         # set session
         session['user_id'] = user.user_id
         session['role_ids'] = []
-        #3a set session
-        session['customer_job_count'] = str(customerjobcount)
-        session['user_count'] = str(usercount)
-        session['job_count'] = str(jobcount)
-        
-        for role in user.roles:
-            session['role_ids'].append(role.role_id)
-        flash('User: {} has been logged in!'.format(email).format(email).format(email).format(email) )
 
-        # Role ID 3 is a customer
-        if  3 in session['role_ids']:
-            user = User.query.filter_by(email=email).first()
-            jobs = Job.query.filter_by(customer_id=user.user_id).all()  
-            return render_template('index.html', current_user=user, jobs=jobs)      
-        # Role ID 1 is admin
-        if  1 in session['role_ids']:
-            user = User.query.filter_by(email=email).first()
-            jobs = Job.query.filter_by(customer_id=user.user_id).all()
-            users = User.query.filter_by(email=email).all()
-            # products = Product.query.filter_by(product_number=product_number).all()
-            return render_template('index.html', current_user=user)       # role_id = 1
-        # Role ID  2 is Estimator
-        if  2 in session['role_ids']:
-            user = User.query.filter_by(email=email).first()
-            jobs = Job.query.filter_by(customer_id=user.user_id).all()
-            return render_template('index.html', current_user=user)       # role_id = 2
+
         
-        # if  session['role_id']== '4': 
-        #     #return session['role_id'] 
-        #     return render_template('dashboard_view_4.html')       # role_id = 4
+    for role in user.roles:
+        session['role_ids'].append(role.role_id)
+    flash('User: {} has been logged in!'.format(email) )
+
+    # Role ID 3 is a customer
+    if  3 in session['role_ids']:
+        user = User.query.filter_by(email=email).first()
+        jobs = Job.query.filter_by(customer_id=user.user_id).all()  
+        return render_template('index.html', current_user=user, jobs=jobs)      
+    # Role ID 1 is admin
+    if  1 in session['role_ids']:
+        user = User.query.filter_by(email=email).first()
+        jobs = Job.query.filter_by(customer_id=user.user_id).all()
+        users = User.query.filter_by(email=email).all()
+        productcount = Product.query.count()
+        customerjobcount = Job.query.filter(Job.customer_id == user.user_id).count()
+        usercount = User.query.count()
+        jobcount = Job.query.count()
+        invoicecount = Job.query.filter_by(status='invoice_sent').count()
+        return render_template('index.html', current_user=user, 
+                               usercount=usercount, jobcount=jobcount,
+                               productcount=productcount,
+                               invoicecount=invoicecount)
+
+    # Role ID  2 is Estimator
+    if  2 in session['role_ids']:
+        user = User.query.filter_by(email=email).first()
+        jobs = Job.query.filter_by(customer_id=user.user_id).all()
+        return render_template('index.html', current_user=user)       
+    f
+    # if  session['role_id']== '4': 
+    #     #return session['role_id'] 
+    #     return render_template('dashboard_view_4.html')       
        
        
-    else:
-        flash('Password does not match!')
-        return render_template('login_form.html')
+    # else:
+    #     flash('Password does not match!')
+    return render_template('login_form.html')
 
 
 @app.route('/logout')
@@ -135,11 +139,13 @@ def logout():
         return render_template('homepage.html')
 
 
-@app.route('/show_user')
-def show_user():
+@app.route('/show_user/<user_id>')
+def show_user(user_id):
     """Shows Detailed information of Chosen User"""
 
-    return render_template('show_user.html')
+    user = User.query.filter_by(user_id=user_id).first()
+
+    return render_template('show_user.html', user=user)
 
 
 @app.route('/users/<int:user_id>')
@@ -151,27 +157,27 @@ def user_detail(user_id):
     return render_template('show_user.html', user=user)
 
 
-@app.route('/dashboard')
-def dashboard():
-    """Dashboard"""
+# @app.route('/dashboard')
+# def dashboard():
+#     """Dashboard"""
 
-    return 'a dashboard'
+#     return 'a dashboard'
 
-    user_id = session.get('user_id')
-    roles = session.get('role_id') 
-    user = User.query.filter_by(user_id=user_id).first()
+#     user_id = session.get('user_id')
+#     roles = session.get('role_id') 
+#     user = User.query.filter_by(user_id=user_id).first()
 
-    if 'admin' in roles:
-        return render_template('templates/dashboard.html', page=page)
+#     if 'admin' in roles:
+#         return render_template('templates/dashboard.html', page=page)
 
 
 @app.route('/all_users')
 def user_list():
-    """Show List of All Users is ECRM."""
+    """Show List of All Users in ECRM."""
     
-    user = User.query.filter(User.user_id > 1 ).all()
+    users = User.query.all()
 
-    return render_template("all_users.html", user=user)
+    return render_template("all_users.html", users=users)
 
 
 @app.route('/create_new_user')
@@ -249,6 +255,14 @@ def add_customer_to_db():
     
     return render_template('create_new_user.html', page=page)
 
+
+@app.route('/all_jobs')
+def job_list():
+    """Show List of All Jobs in ECRM."""
+    
+    jobs = Job.query.all()
+
+    return render_template("all_jobs.html", jobs=jobs)
 
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):
