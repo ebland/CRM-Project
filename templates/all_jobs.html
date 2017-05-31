@@ -6,7 +6,7 @@
   {% for job in jobs %}
   <li>{{ job.name }}</li>
     <li>
-      <a href="/all_jobs/{{ job.job_id }}">
+      <a href="/jobs/{{ job.job_id }}">
         {{ job.description}} {{job.customer.fname}} {{job.customer.lname}}
       </a>
      </li>

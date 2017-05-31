@@ -44,6 +44,11 @@
           <th>City:</th>
           <th>State: </th>
           <th>Zipcode: </th>
+          <th>Department: </th>
+          <th>Birthday:: </th>
+          <th>Job Title: </th>
+          <th>User Status:</th>
+
       </tr>
        <tr data-toggle="modal">
           <td>{{ user.fname }}</td>
@@ -52,31 +57,18 @@
           <td>{{ user.address1 }}</td>
           <td>{{ user.address2 }}</td>
           <td>{{ city }}, {{ state }} {{ zip_code}}</td>
-       
+          <td> {{ user.job_title }}</td>
+          <td>{{ user.department }}</td>
+          <td> {{ user.birthdate }}</td>
+          <td> {{ user.active }}</td>
         </tr>
      
     </table>
-        First Name: {{ user.fname }} 
-        Last Name: {{ user.lname }} 
-        Email Address: {{ user.email }} 
-        User Since: {{ user.created_date }}
-        Address Line 1: {{ user.address1 }}
-        Address Line 2: {{ user.address2 }}
-        City: {{ user.city }}
-        State: {{ user.state }}
-        Zipcode: {{ user.zipcode }}
-
+        
         Detailed User Information for Administration Only:
         <!--create this in model to be imported here 5/17/17-->
         <!-- Employee/Staff: {{ is_Staff }} -->
-        Job Title: {{ user.job_title }}
-        Department: {{ user.department }}
-        Birthday: {{ user.birthdate }}
-
-        User Status: {{ user.active }}
-        User Since: {{ user.modified }}
-       
-        RoleID/Permissions: 
+         RoleID/Permissions: 
 
         <div class="field">
           <button class="btn btn-primary" type="submit">Update User</button>

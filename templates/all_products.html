@@ -4,9 +4,9 @@
 <h2>All Products</h2>
 <ul>
   {% for product in products %}
-  <li>{{ product.name }}</li>
+  <li>{{ product.product_id }}</li>
     <li>
-      <a href="/product/{{ product.product_id }}">
+      <a href="/product_detail/{{ product.product_id }}">
         {{ product.description}} {{ product.product_number }} {{ product.price }}
       </a>
      </li>

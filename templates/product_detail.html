@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block stylesheet %}
+    <link href="{{ url_for('static', filename='css/ecrm.css') }}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!-- Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css"
+          rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+{% endblock %}
+{% block content_header %}
+  {% include "content_header.html" %} 
+{% endblock content_header %}
+{% block content %}
+  {% if user in session %}
+<form action="/product_detail", methods=["GET", "POST"]>
+
+<h2>Product Information:</h2>
+<ul>
+    <li>
+        {{ product.name}} ({{product.product_id}})
+    </li> 
+    {% endif %}
+</ul>
+</form>
+
+  <ul class="breadcrumb">
+    <li>  <a href="/product_detail/{{ product.product_id }}">
+        {% if "user_id" in session and 1 in session["role_ids"]%}
+       </a> <span class="divider">product Info</span></li>
+    <li class="active">{{ product.product_number }} - {{ product.product_name }}</li>  
+  </ul>
+ 
+  <div class="show-product-information">
+
+<div class="header">Product Details</div>
+  <div class="fields">
+      <table class="table">
+        <tr>
+          <th>Product Number: </th>
+          <th>Product Name: </th>
+          <th>Product Description:  </th>
+          <th>Product Type: </th>
+          <th>Product Price:</th>
+          <th>image_url: </th>
+      </tr>
+       <tr data-toggle="modal">
+          <td>{{ product.product_number }}</td>
+          <td>{{ product.product_name }}</td>
+          <td>{{ product.description}}</td>
+          <td>{{ product.product_type }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.image_url }}</td>
+          
+        </tr>
+     
+    </table>
+        
+        Detailed product Information for Administration Only:
+        <!--create this in model to be imported here 5/17/17-->
+        <!-- Employee/Staff: {{ is_Staff }} -->
+         RoleID/Permissions: 
+
+        <div class="field">
+          <button class="btn btn-primary" type="submit">Update Product</button>
+          <!-- Leslie I may need to tie this to a separate delete_form -->
+        </div>
+      </div>
+  </div> 
+    {% endif %} 
+  {% endblock content %}
+
+
+  

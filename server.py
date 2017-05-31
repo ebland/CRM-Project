@@ -250,6 +250,24 @@ def job_list():
 
     return render_template("all_jobs.html", jobs=jobs)
 
+
+@app.route('/jobs/<int:job_id>')
+def job_detail(job_id):
+    """Show User Information"""
+   
+    job = Job.query.filter_by(job_id=job_id).first()
+    
+    return render_template('job_detail.html', job=job)   
+
+
+@app.route('/product_detail/<int:product_id>')
+def product_detail(product_id):
+    """Show User Information"""
+   
+    product = Product.query.filter_by(product_id=product_id).first()
+    
+    return render_template('product_detail.html', product=product)   
+
 @app.route('/all_products')
 def product_list():
     """Show List of All Products in ECRM."""
@@ -263,7 +281,7 @@ def product_list():
 def invoice_list():
     """Show List of All Invoices in ECRM."""
     
-    invoices = Invoice.query.all()
+    invoices = Job.query.filter_by(status='invoice_sent').all()
 
     return render_template("all_invoices.html", invoices=invoices)
 

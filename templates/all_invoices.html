@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
   
-  <h1>Invoices <a href="{{ url_for('invoice.create_invoice') }}" class='btn btn-mini btn-primary'>New invoice</a></h1>
+  <h1>Invoices <a href="" class='btn btn-mini btn-primary'>New invoice</a></h1>
 
   {% if invoices|length == 0 %}
     
@@ -19,9 +19,9 @@
      <tbody>
       {% for invoice in invoices %}
           <tr class="clickable" data-id="{{ invoice.id }}">
-            <td class="col due">{{ invoice.due_date.strftime('%d %B %Y') }}</td>
-            <td class="col ref">{{ invoice.invoice_number }}</td>
-            <td class="col name">{{ invoice.customer.lname, invoice.customer.fname() }} <br></td>
+            <td class="col due">{{ invoice.name }}</td>
+            <td class="col ref">{{ invoice.user.lname }}</td>
+            <td class="col name">{{ invoice.customer.lname, invoice.customer.fname }} <br></td>
           </tr>
         {% endfor %}
       </tbody>
