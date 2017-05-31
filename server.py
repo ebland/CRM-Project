@@ -15,7 +15,7 @@ app.secret_key = "ABC"
 
     #return render_template('page_not_found.html'), 404
 
-@app.route('/index')
+@app.route('/homepage')
 def root():
 
     return render_template("homepage.html")
@@ -24,7 +24,7 @@ def root():
 def index():
     """Homepage."""
 
-    return render_template("index.html")
+    return render_template("homepage.html")
 
 
 @app.route('/search')
@@ -93,7 +93,7 @@ def login_process():
     if  3 in session['role_ids']:
         user = User.query.filter_by(email=email).first()
         jobs = Job.query.filter_by(customer_id=user.user_id).all()  
-        return render_template('index.html', current_user=user, jobs=jobs)      
+        return render_template('homepage.html', current_user=user, jobs=jobs)      
     # Role ID 1 is admin
     if  1 in session['role_ids']:
         user = User.query.filter_by(email=email).first()
@@ -104,7 +104,7 @@ def login_process():
         usercount = User.query.count()
         jobcount = Job.query.count()
         invoicecount = Job.query.filter_by(status='invoice_sent').count()
-        return render_template('index.html', current_user=user, 
+        return render_template('homepage.html', current_user=user, 
                                usercount=usercount, jobcount=jobcount,
                                productcount=productcount,
                                invoicecount=invoicecount)
@@ -113,7 +113,7 @@ def login_process():
     if  2 in session['role_ids']:
         user = User.query.filter_by(email=email).first()
         jobs = Job.query.filter_by(customer_id=user.user_id).all()
-        return render_template('index.html', current_user=user)       
+        return render_template('homepage.html', current_user=user)       
     f
     # if  session['role_id']== '4': 
     #     #return session['role_id'] 
@@ -154,21 +154,7 @@ def user_detail(user_id):
    
     user = User.query.filter_by(user_id=user_id).first()
     
-    return render_template('show_user.html', user=user)
-
-
-# @app.route('/dashboard')
-# def dashboard():
-#     """Dashboard"""
-
-#     return 'a dashboard'
-
-#     user_id = session.get('user_id')
-#     roles = session.get('role_id') 
-#     user = User.query.filter_by(user_id=user_id).first()
-
-#     if 'admin' in roles:
-#         return render_template('templates/dashboard.html', page=page)
+    return render_template('customer_profile.html', user=user)
 
 
 @app.route('/all_users')
@@ -215,7 +201,7 @@ def new_user():
   
         flash("User was addded successfully!!!")
         
-        return redirect('/dashboard')
+        return redirect('/homepage')
 
     else:
         return render_template('create_new_user.html')
@@ -251,7 +237,7 @@ def add_customer_to_db():
     
     flash("Customer was addded successfully!!!")
 
-    return redirect(url_for('/')) #DASHBOARD??????
+    return redirect(url_for('homepage')) 
     
     return render_template('create_new_user.html', page=page)
 
@@ -263,6 +249,24 @@ def job_list():
     jobs = Job.query.all()
 
     return render_template("all_jobs.html", jobs=jobs)
+
+@app.route('/all_products')
+def product_list():
+    """Show List of All Products in ECRM."""
+    
+    products = Product.query.all()
+
+    return render_template("all_products.html", products=products)
+
+
+@app.route('/all_invoices')
+def invoice_list():
+    """Show List of All Invoices in ECRM."""
+    
+    invoices = Invoice.query.all()
+
+    return render_template("all_invoices.html", invoices=invoices)
+
 
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):
@@ -310,30 +314,29 @@ def new_quote():
 
 # @app.route('/all_invoices/', methods=['POST'])
 
-
+#TO DO:// get this working to post to html with tite create_invoice.html
 @app.route('/create_new_invoice/', methods=["GET", "POST"])
 def new_invoice():
-    # invoice=invoice_id
-    # invoice_number = request.form['invoice_number']
     
     invoice_id=()
     page = 'create_invoice'
-    #can i set one of the separate to import existing customer
+
+ #TO DO:// LINK ALL TOGETHER
     #or to create a relationship that will link customer, staff, job, etc
     name = request.form.get('name')
     description = request.form.get('description')
     job_id = request.form.get('job_id')
     invoice_created_date = datetime.datetime.now()
-    # invoice_due_date = datetime.datetime()
+    invoice_due_date = datetime.datetime()
     phone = request.form.get('phone')
     location_address1 = request.form.get('location_address1')
     location_address2= request.form.get('location_address2')
     location_city = request.form.get('city')
     location_state = request.form.get('state')
-    # company = request.form.get('company')
+    company = request.form.get('company')
     date_paid = request.form.get('date_paid')
     date_sent = request.form.get('date_sent')
-    # invoice = db.relationship('invoice')
+   
   
     invoice = Invoice(name=name, description=description,job_id=job_id, 
                      location_address1=location_address1, location_address2=location_address2, location_city=location_city, location_state=location_state)
@@ -344,7 +347,7 @@ def new_invoice():
     
     flash("Invoice created successfully!!!")
 
-    return redirect(url_for('create_invoice', create_invoice=create_invoice)) #DASHBOARD??????
+    return redirect(url_for('create_invoice', create_invoice=create_invoice)) 
     
     return render_template('create_invoice.html', page=page)
 

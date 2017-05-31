@@ -1,62 +1,48 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+
+{% block content_header %}
+{% include "content_header.html" %} 
+{% endblock content_header %}
+
 {% block content %}
 
-    <div id="homepage">
-        <form action="/search_process">
-            First Name<br>
-            <input type="text" name="fname"><br>
-            Last Name<br>
-            <input type="text" name="lname">
-            <br>
-            <br>
-            <input type="submit" name="search">
-        </form>
-    </div>
+<div page-header>
+    <h4 class="page-header">Welcome
+      {% if "user_id" in session and 3 in session["role_ids"]%}
+    </h4>
+  {% endif %}
+</div>
 
-    <h1>ECM Dashboard/Homepage:</h1>
+ <a href ="http://www.elizabethblandonline.com/avatar-liz-color.png"></a>
+
+
+<h4>Current Features</h4>
+<ul>
+<li><a href="/invoice">Invoicing</a></li>
+<li><a href="/staff">Staff</a></li>
+<li><a href="/all_users">Client List</a></li>
+</ul>
+
+  {% if "user_id" in session and 1 in session["role_ids"]%}
+    {% include "dashboard_modules.html" %} 
+  {% endif %}
+
+    <h3>Modules</h3>
+    <ul>
+      <li><a>User Management</a></li>
+      <li><a>Client  Management</a></li>
+      <li><a>Staff Management</a></li>
+    </ul>
 
 {% if "user_id" in session and 3 in session["role_ids"]%}
+  {% for job in jobs %}
+
+    {{ job.name }}
+
+  {% endfor %}
+{% endif %}
 
 
-    <h2>Users</h2>
-
-    <p><a href="templates/all_users.html">USER LIST</a></p>
-    
-    {% endif %}
-
-    <h2>Products</h2>
-
-    <p><a href="/TBD">PRODUCT LIST</a></p>
-
-    <h2>Invoices</h2>
-
-    <p><a href="/TBD">INVOICES LIST</a></p>
-
-
-
-<script type="text/javascript">
- var loginJson ={};
- var loginOK;
-
-//<!--Build object checkLogin for AJAX request-->
-
- function checkLogin(evt) {
-    loginJson['email'] = $('#email-field').val();
-    loginJson['password'] = $('#password-field').val();
-
-//<!--Verify correct email and password (login) of user with AJAX-->
-
-    $.post('login.json', loginJson, function(result){
-        $('#display-msg').html(result['login']);
-        loginOk = result['login'];
-    })
-        if (loginOk == 'User not found') {
-            evt.preventDefault();
-        }
-    }
-//<!--Event Handler to check/validate correct email and password of user-->
-    $('#check-login').on('submit', checkLogin);
-</script>
-{% endblock %}
-
-
+{% endblock content %}
+http://0.0.0.0:5001/img/avatar-liz-color.png

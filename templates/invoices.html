@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>All Jobs</h2>
+<h2>All Invoices</h2>
 <ul>
-  {% for job in jobs %}
-  <li>{{ job.name }}</li>
+  {% for invoice in invoices %}
+  <li>{{ invoice.name }}</li>
     <li>
-      <a href="/all_jobs/{{ job.job_id }}">
-        {{ job.description}} {{job.customer.fname}} {{job.customer.lname}}
+      <a href="/invoice/{{ invoice.invoice_id }}">
+        {{ invoice.description}} {{ invoice.invoice_number }} {{ invoice.price }}
       </a>
      </li>
 
@@ -16,13 +16,13 @@
     <div class="col-md-4">
       <ul class="nav nav-pills nav-stacked">
         <li ng-class="{ active: isSet(1) }">
-            <a href ng-click="setTab(1)">Home</a>
+            <a href ng-click="setTab(1)">In Stock</a>
         </li>
         <li ng-class="{ active: isSet(2) }">
-            <a href ng-click="setTab(2)">Profile</a>
+            <a href ng-click="setTab(2)">Inventory</a>
         </li>
         <li ng-class="{ active: isSet(3) }">
-            <a href ng-click="setTab(3)">All Jobs</a>
+            <a href ng-click="setTab(3)">Order</a>
         </li>
       </ul>
     </div>
