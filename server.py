@@ -268,6 +268,17 @@ def invoice_list():
     return render_template("all_invoices.html", invoices=invoices)
 
 
+@app.route('/invoice_form')
+def invoice_form():
+    """Invoice form for new entries in ECRM."""
+
+    invoices = Invoice.query.all() 
+
+    return render_template("invoice_form.html", invoices=invoices)
+
+
+
+
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):
     return 'a string'
@@ -349,7 +360,7 @@ def new_invoice():
 
     return redirect(url_for('create_invoice', create_invoice=create_invoice)) 
     
-    return render_template('create_invoice.html', page=page)
+    return render_template('invoice_form.html', page=page)
 
 @app.route('/create_invoice/', methods = ['GET', 'POST'])
 def create_invoice():
@@ -395,7 +406,7 @@ def create_invoice():
         db.session.commit()
         return redirect(url_for('show_invoice'))
 
-    return render_template("create_invoice.html")
+    return render_template("invoice_form.html")
 
 if __name__ == "__main__":
     app.debug = True
