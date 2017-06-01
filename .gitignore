@@ -12,5 +12,7 @@ newmodel.py
 requirements.txt
 untitled
 /Static
+*.js
+*.css
 
 
