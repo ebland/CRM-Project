@@ -4,7 +4,7 @@ import datetime
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session
-from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Invoice, Product
+from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product
 
 app = Flask(__name__)
 
@@ -15,10 +15,6 @@ app.secret_key = "ABC"
 
     #return render_template('page_not_found.html'), 404
 
-@app.route('/homepage')
-def root():
-
-    return render_template("homepage.html")
 
 @app.route('/homepage')
 def index():
@@ -173,6 +169,12 @@ def create_new_user():
     return render_template('create_new_user.html')
 
 
+@app.route('/delete_user')
+def delete_user():
+    """Deletes a user"""
+    return render_template('delete_user_form.html')
+ 
+
 @app.route('/create_new_user_process', methods=["GET", "POST"])
 def new_user():
 
@@ -205,6 +207,105 @@ def new_user():
 
     else:
         return render_template('create_new_user.html')
+
+
+@app.route('/all_jobs')
+def job_list():
+    """Show List of All Jobs in ECRM."""
+    
+    jobs = Job.query.all()
+
+    return render_template("all_jobs.html", jobs=jobs)
+
+
+@app.route('/jobs/<int:job_id>')
+def job_detail(job_id):
+    """Show User Information"""
+   
+    job = Job.query.filter_by(job_id=job_id).first()
+    
+    return render_template('job_detail.html', job=job)   
+
+
+@app.route('/job_form')
+def job_form():
+    """Create Job"""
+    
+    return render_template('job_form.html')  
+
+@app.route('/create_job_process', methods=['POST'])
+def create_new_job():
+    """Create New Job."""
+
+   ##TO DO
+    ####REQUEST.FORM.GET on fields after form is created in html.
+    #new_job = Job(.....,......,.....,..=...ETC)
+    #db.session.add()
+    #db.session.commit()
+    return redirect('/all_jobs')
+
+
+@app.route('/all_products')
+def product_list():
+    """Show List of All Products in ECRM."""
+    
+    products = Product.query.all()
+
+    return render_template("all_products.html", products=products)
+
+
+@app.route('/product_detail/<int:product_id>')
+def product_detail(product_id):
+    """Show User Information"""
+   
+    product = Product.query.filter_by(product_id=product_id).first()
+    
+    return render_template('product_detail.html', product=product)   
+
+
+@app.route('/new_product_form')
+def create_product_form():
+    """Show product form."""
+    
+    return render_template('product_form.html')  
+
+
+@app.route('/create_product_process', methods=['POST'])
+def create_new_product():
+    """Create or ADD Product."""
+
+   ##TO DO
+    ####REQUEST.FORM.GET on fields after form is created in html.
+    #new_product = Product(.....,......,.....,..=...ETC)
+    #db.session.add()
+    #db.session.commit()
+    return redirect('/all_products')
+
+@app.route('/invoice_detail/<int:job_id>')
+def invoice_detail(job_id):
+    """Show User Information"""
+   
+    job = Job.query.filter_by(job_id=job_id).first()
+    
+    return render_template('job_detail.html', job=job)   
+
+
+@app.route('/all_invoices')
+def invoice_list():
+    """Show List of All Invoices in ECRM."""
+    
+    invoices = Job.query.filter_by(status='invoice_sent').all()
+
+    return render_template("all_invoices.html", invoices=invoices)
+
+
+@app.route('/invoice_form')
+def invoice_form():
+    """Invoice form for new entries in ECRM."""
+
+    invoices = Invoice.query.all() 
+
+    return render_template("invoice_form.html", invoices=invoices)
 
 
 @app.route('/process_add_customer', methods=["GET", "POST"])
@@ -242,61 +343,6 @@ def add_customer_to_db():
     return render_template('create_new_user.html', page=page)
 
 
-@app.route('/all_jobs')
-def job_list():
-    """Show List of All Jobs in ECRM."""
-    
-    jobs = Job.query.all()
-
-    return render_template("all_jobs.html", jobs=jobs)
-
-
-@app.route('/jobs/<int:job_id>')
-def job_detail(job_id):
-    """Show User Information"""
-   
-    job = Job.query.filter_by(job_id=job_id).first()
-    
-    return render_template('job_detail.html', job=job)   
-
-
-@app.route('/product_detail/<int:product_id>')
-def product_detail(product_id):
-    """Show User Information"""
-   
-    product = Product.query.filter_by(product_id=product_id).first()
-    
-    return render_template('product_detail.html', product=product)   
-
-@app.route('/all_products')
-def product_list():
-    """Show List of All Products in ECRM."""
-    
-    products = Product.query.all()
-
-    return render_template("all_products.html", products=products)
-
-
-@app.route('/all_invoices')
-def invoice_list():
-    """Show List of All Invoices in ECRM."""
-    
-    invoices = Job.query.filter_by(status='invoice_sent').all()
-
-    return render_template("all_invoices.html", invoices=invoices)
-
-
-@app.route('/invoice_form')
-def invoice_form():
-    """Invoice form for new entries in ECRM."""
-
-    invoices = Invoice.query.all() 
-
-    return render_template("invoice_form.html", invoices=invoices)
-
-
-
-
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):
     return 'a string'
@@ -325,10 +371,9 @@ def invoice_delete(invoice_id):
     return redirect(url_for('all_invoices'))
 
 
-
-@app.route('/invoices/new_quote/', methods=['POST'])
-def new_quote():
-    quote_number = request.form['quote_number']
+# @app.route('/invoices/new_quote/', methods=['POST'])
+# def new_quote():
+#     quote_number = request.form['quote_number']
 #     #I want to do a timestamp here UNIX
 #     # customer_id
 #     #user_id

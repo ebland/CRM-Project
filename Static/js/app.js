@@ -58,11 +58,7 @@ $(function() {
      * SCROLL TO DROPDOWNS
      * ---------------------------------------
      */
-    $(".navbar .menu").slimscroll({
-        height: "200px",
-        alwaysVisible: false,
-        size: "3px"
-    }).css("width", "100%");
+ 
 
     /*
      * This makes the buttons work

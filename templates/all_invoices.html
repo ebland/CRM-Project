@@ -9,7 +9,7 @@
     
   {% else %}
     <div class="workspace-inner">
-    <table class="table table-striped table-hover data-list invoice-data-list">
+    <table class="table data-list invoice-data-list">
       <thead class="data-list-header">
         <td class="col due">Due date</td>
         <td class="col ref">Invoice Number</td>
@@ -18,10 +18,11 @@
       </thead>
      <tbody>
       {% for invoice in invoices %}
-          <tr class="clickable" data-id="{{ invoice.id }}">
+          <tr class="clickable" data-id="{{ invoice.job_id }}">
             <td class="col due">{{ invoice.name }}</td>
             <td class="col ref">{{ invoice.user.lname }}</td>
-            <td class="col name">{{ invoice.customer.lname, invoice.customer.fname }} <br></td>
+            <td class="col name">{{ invoice.customer.lname}} {{ invoice.customer.fname }} <br></td>
+            <td class="col total">{{ invoice.total }}</br></td>
           </tr>
         {% endfor %}
       </tbody>
@@ -33,7 +34,7 @@
     $(document).ready(function() {
       $('table.data-list > tbody > tr').on('click', function(evt) {
         var el = $(this);
-        window.location = '/invoice/' + el.data('id');
+        window.location = '/invoice_detail/' + el.data('id');
       });
     });
   </script>

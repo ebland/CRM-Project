@@ -49,10 +49,10 @@
           <td>{{ job.name }}</td>
           <td>{{ job.job_location }}</td>
           <td>{{ job.name}}</td>
-          <td>{{ job.customer }}</td>
+          <td> {{ job.customer }}</td>
           <td>{{ job.user.lname }} {{ job.user.fname }}</td>
-          <td>{{ job.status }}</td>
-          <td>{{ job.total }}</td>
+          <td> {{ job.status }}</td>
+          <td> {{ job.total }}</td>
         </tr>
      
     </table>
@@ -61,18 +61,11 @@
         <!--create this in model to be imported here 5/17/17-->
         <!-- Employee/Staff: {{ is_Staff }} -->
          RoleID/Permissions: 
-    <h2>Product List</h2>
-    {% for product in job.product %}
-      {{ product.name }}
-      {{ product.product_number }}
-      {{ product.price }}
-    {% endfor %}
-        <div class="field">
 
+        <div class="field">
           <button class="btn btn-primary" type="submit">Update job</button>
           <!-- Leslie I may need to tie this to a separate delete_form -->
         </div>
-         
       </div>
   </div> 
     {% endif %} 
