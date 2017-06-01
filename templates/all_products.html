@@ -2,6 +2,7 @@
 {% block content %}
 
 <h2>All Products</h2>
+<a href='/new_product_form'><button class="btn btn-primary" type="button">Add Product</button></a>
 <ul>
   {% for product in products %}
   <li>{{ product.product_id }}</li>

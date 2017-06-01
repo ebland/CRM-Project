@@ -231,17 +231,17 @@ def job_detail(job_id):
 def job_form():
     """Create Job"""
     
+    #SELECT USERS BY ROLE ID 2 PASS INTO DROPDOWN MENU ON CREATE JOB FORM
+    #SELECT USERS BY ROLE ID 2 PASS INTO DROPDOWN MENU ON CREATE JOB FORM
+    #SELECT PRODUCTS PASS INTO DROPDOWN MENU ON CREATE JOB FORM
+    
+
     return render_template('job_form.html')  
 
 @app.route('/create_job_process', methods=['POST'])
 def create_new_job():
     """Create New Job."""
 
-   ##TO DO
-    ####REQUEST.FORM.GET on fields after form is created in html.
-    #new_job = Job(.....,......,.....,..=...ETC)
-    #db.session.add()
-    #db.session.commit()
     return redirect('/all_jobs')
 
 
@@ -274,12 +274,25 @@ def create_product_form():
 def create_new_product():
     """Create or ADD Product."""
 
-   ##TO DO
-    ####REQUEST.FORM.GET on fields after form is created in html.
-    #new_product = Product(.....,......,.....,..=...ETC)
-    #db.session.add()
-    #db.session.commit()
+    product_name = request.form.get('name')
+    description = request.form.get('description')
+    product_number = request.form.get('product_number')
+    product_type = request.form.get('product_type')
+    created_date = datetime.datetime.now()
+    price = request.form.get('price')
+
+    product = Product(product_name=product_name, description=description, 
+                      product_number=product_number, 
+                      product_type=product_type, 
+                      created_at=created_date, price=price)
+
+    db.session.add(product)
+    db.session.commit()
+
+    flash("Product added successfully!!!")
+    
     return redirect('/all_products')
+
 
 @app.route('/invoice_detail/<int:job_id>')
 def invoice_detail(job_id):
