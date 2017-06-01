@@ -110,21 +110,13 @@ def login_process():
         user = User.query.filter_by(email=email).first()
         jobs = Job.query.filter_by(customer_id=user.user_id).all()
         return render_template('homepage.html', current_user=user)       
-    f
-    # if  session['role_id']== '4': 
-    #     #return session['role_id'] 
-    #     return render_template('dashboard_view_4.html')       
-       
-       
-    # else:
-    #     flash('Password does not match!')
+    
     return render_template('login_form.html')
 
 
 @app.route('/logout')
 def logout():
     """Logs a user out"""
-    #return 'a logout'
 
     if (session['user_id'] != None):
         if session['user_id'] == True:
@@ -231,9 +223,24 @@ def job_detail(job_id):
 def job_form():
     """Create Job"""
     
-    #SELECT USERS BY ROLE ID 2 PASS INTO DROPDOWN MENU ON CREATE JOB FORM
-    #SELECT USERS BY ROLE ID 2 PASS INTO DROPDOWN MENU ON CREATE JOB FORM
-    #SELECT PRODUCTS PASS INTO DROPDOWN MENU ON CREATE JOB FORM
+    name = request.form.get('name')
+    description = request.form.get('description')
+    user_id = request.form.get('user_id')
+    customer_id = request.form.get('customer_id')
+    created_date = datetime.datetime.now()
+    job_location = request.form.get('job_location')
+
+    product = Product(name=name, description=description, 
+                      user_id=user_id, 
+                      customer_id =customer_id , 
+                      created_date=created_date, job_location=job_location)
+
+    db.session.add(job)
+    db.session.commit()
+
+    flash("Job added successfully!!!")
+    
+    return redirect('/all_jobs')
     
 
     return render_template('job_form.html')  
@@ -414,7 +421,7 @@ def new_invoice():
     description = request.form.get('description')
     job_id = request.form.get('job_id')
     invoice_created_date = datetime.datetime.now()
-    invoice_due_date = datetime.datetime()
+    #invoice_due_date = datetime.datetime()
     phone = request.form.get('phone')
     location_address1 = request.form.get('location_address1')
     location_address2= request.form.get('location_address2')
@@ -425,10 +432,10 @@ def new_invoice():
     date_sent = request.form.get('date_sent')
    
   
-    invoice = Invoice(name=name, description=description,job_id=job_id, 
-                     location_address1=location_address1, location_address2=location_address2, location_city=location_city, location_state=location_state)
+    #invoice = Invoice(name=name, description=description,job_id=job_id, 
+       #              location_address1=location_address1, location_address2=location_address2, location_city=location_city, location_state=location_state)
    
-    db.session.add(invoice)
+    #db.session.add(invoice)
    
     db.session.commit()
     
@@ -465,7 +472,7 @@ def create_invoice():
                         code = single_product[0]
                         product_name = single_product[1]
                         price = float(single_product[2])
-                        total = (price) * int(quantity)
+                        total = float((price) * int(quantity))
                         product_list.append(product_name)
                         quantity.append(quantity)
                         product_price.append(total)
