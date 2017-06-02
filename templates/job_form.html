@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  
+  <ul class="breadcrumb">
+    <li><a href="/job_form">Create New Job</a> <span class="divider">/</span></li>
+    <li class="active">Start Procurement</li>
+  </ul>
+
+  <div class="form-group">
+    <div id="create_job_process">
+        <form action="/create_job_process" method="POST">
+          <div class="header">Instructions: Fill in all information then select "Create Job".</div>  
+          <div class="fields">
+            Project Name/Job Title:<br>
+            <input type="text" name="name" required><br>
+            Job Description / Material List / Dims:<br>
+            <input type="text" name="description" required><br>
+            Job Site:<br>
+            <input type="text" name="location"><br> 
+                <form method="post">
+                    <label><div>Assigned Staff</div>
+                        <input type="text" name="user" value="{{ user }}">
+                    </label>
+                    <label><div>User Role</div>
+                        <select>{% for role in roles %}
+                          <option value="{{ role.role_id }}">{{ role.name }}</option>
+                                 {% endfor %}
+                        </select>
+                     </label>
+                
+                    <input type="text" name="staff"><br> 
+                    Customer:
+                    <select>{% for customer in customer_list %}
+                          <option value="{{ customer.user_id }}">
+                            {{ customer.fname }} {{ customer.lname }}
+                          </option>
+                            {% endfor %}
+                    </select>
+                    Staff:
+                    <select>{% for staff in staff_list %}
+                          <option value="{{ staff.user_id }}">
+                            {{ staff.fname }} {{ staff.lname }}
+                          </option>
+                        {% endfor %}
+                    </select>
+
+            <input class="button normal" type="submit" value="Create Job">
+            </form>
+            </div>
+        </form>
+      </div>
+    </form>
+
+  </div>
+
+
+
+{% endblock %}

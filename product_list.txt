@@ -1,0 +1,6 @@
+product_1=Product(product_number='12345678',single_product='good product',price='3.47')
+product_2=Product(product_number='11111111',single_product='big product',price='3.47')
+product_3=Product(product_number='22222222',single_product='small product',price='3.47')
+product_4=Product(product_number='33333333',single_product='bigger product',price='3.47')
+product_5=Product(product_number='44444444',single_product='biggest product',price='3.47')
+product_6=Product(product_number='42525252',single_product='biggest product',price='3.47')
