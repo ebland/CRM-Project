@@ -114,6 +114,15 @@ def login_process():
     return render_template('login_form.html')
 
 
+@app.route('/all_staff')
+def all_staff():
+    """Show List of All Staff in ECRM."""
+    #TOOOO DOOOOOOOOOOO QUEARY ONLY ROLE_ID 1 AND 3 AS STAFF
+    staff = User.query.all()
+
+    return render_template("all_staff.html", staff=staff)
+
+
 @app.route('/logout')
 def logout():
     """Logs a user out"""
@@ -209,6 +218,14 @@ def job_list():
 
     return render_template("all_jobs.html", jobs=jobs)
 
+@app.route('/all_job_table')
+def job_table():
+    """Show List of All Jobs in ECRM."""
+    
+    jobs = Job.query.all()
+
+    return render_template("all_job_table.html", jobs=jobs)
+
 
 @app.route('/jobs/<int:job_id>')
 def job_detail(job_id):
@@ -238,10 +255,46 @@ def job_form():
     return render_template('job_form.html', roles=roles, staff_list=staff_list,
                            customer_list=customer_list)  
 
-#TO DOoOOOOOO
+
 @app.route('/job_update_process', methods=['POST'])
 def update_job():
-    pass
+
+    status = request.form.get('status')
+    job_id = request.form.get('job_id')
+
+    if job_id is not None:
+        job_id = int(job_id)
+
+    job = Job.query.filter_by(job_id=job_id).first()
+    job.status = status
+  
+    db.session.add(job)
+    db.session.commit()
+
+    jobs = Job.query.all()
+
+    return render_template("all_jobs.html", jobs=jobs)
+
+
+@app.route('/job_delete/<int:job_id>', methods=["GET"])
+def job_delete(job_id):
+
+    job_to_delete = 0
+    job_to_delete = request.form.get('job_id')
+    if job_to_delete is not None and code.isnumeric():
+        job_t_delete = int(job_to_delete)
+
+    #invoice = Invoice.query.filter(Invoice_number==invoice_id).first()
+    # job = Job.query.filter_by(job_id=code).first()  #job_id==invoice_id
+    #session.query(MenuItem).filter_by(id=menu_id)
+    db.session.delete(job)
+    db.session.commit()
+
+    flash(gettext(u"Delete Succesfully!"))
+
+    jobs = Job.query.filter().all()   
+
+    return render_template("all_jobs.html", jobs=jobs)
 
 
 @app.route('/create_job_process', methods=['POST'])
@@ -249,7 +302,7 @@ def create_new_job():
     """Create New Job."""
 
     job_id = request.form.get('job_id')
-    quantity = request.form.get('quantity')
+    # quantity = request.form.get('quantity')
     name = request.form.get('name')
     description = request.form.get('description')
     user_id = request.form.get('user_id')
@@ -257,7 +310,7 @@ def create_new_job():
     job_location = request.form.get('job_location')
     total = request.form.get('total')
 
-    job = Job(job_id=job_id, quantity=quantity, name=name, description=description, 
+    job = Job(job_id=job_id, name=name, description=description, 
                       user_id=user_id, customer_id =customer_id , 
                       job_location=job_location, total=total)
 
@@ -382,46 +435,77 @@ def add_customer_to_db():
 
 @app.route('/invoice/confirm/<int:invoice_id>')
 def confirm_invoice(invoice_id):
-    return 'a string'
+   
     invoice = Invoice.query.filter(Invoice.id==invoice_id).first()
     invoice.confirm = datetime.datetime.now()
+
     db.session.commit()
+
     return redirect(url_for('show_invoice', invoice_id=invoice.id))
 
 
 @app.route('/invoice/paid/<int:invoice_id>')
 def invoice_paid(invoice_id):
-    return 'a string'
+    
     invoice = Invoice.query.filter(invoice_number==invoice_id).first()
     invoice_paid = datetime.datetime.now()
+
     db.session.commit()
+
     return redirect(url_for('show_invoice', invoice_id=invoice_number))
 
 
 @app.route('/invoice/delete/<int:invoice_id>')
 def invoice_delete(invoice_id):
-    return 'a string'
-    invoice = Invoice.query.filter(Invoice_number==invoice_id).first()
-    db.session.delete(invoice)
-    db.session.commit()
+   
+    invoice_id = request.form.get('invoice_id')
+    #job_id==invoice_id
+    invoice = Job.query.filter().first()
+    # invoice = Invoice.query.filter(Invoice_number==invoice_id).first()
+    # job_id==invoice_id
+    invoices = Job.query.filter().all()
+    # db.session.delete(invoice) ???? KEEP
+    # db.session.commit() #?????? KEEP
     flash(gettext(u"Delete Succesfully!"))
     return redirect(url_for('all_invoices'))
 
+    db.session.delete(invoice)
+    db.session.commit()
 
-# @app.route('/invoices/new_quote/', methods=['POST'])
-# def new_quote():
-#     quote_number = request.form['quote_number']
-#     #I want to do a timestamp here UNIX
-#     # customer_id
-#     #user_id
-#     # product_number
-#     # status
-#     # in_stock
-#     # in_stock_date
-#     created_date = (request.form['date_received']),
+    return render_template("all_invoices.html", invoices=invoices)
 
-#invoice.get_status
-#to display all invoices in system
+
+@app.route('/invoice_update/<int:invoice_id>', methods=["GET"])
+def invoice_update(invoice_id):
+
+    invoice_id = request.form.get('invoice_id')
+
+    invoice = User.query.filter_by(lname='Leslie').first()
+
+    invoice.name = 'Leslie'
+    db.session.commit()
+
+
+
+    #invoice = Job.query.filter().first()  #job_id==invoice_id
+
+    #invoices = Job.query.filter().first().update({"job_name": u"Bob Marley"})
+    #invoices = session.query(Job).filter_by(job_id==invoice_id).first()
+    #invoices = Job.query.filter().all()  #job_id==invoice_id
+    #return render_template("all_invoices.html", invoices=invoices)
+
+    #if request.method == "GET" :
+    #invoice_id = request.form.get('invoice_id')
+    #fname = request.form.get('fname')
+    #lname = request.form.get('lname')
+
+
+    #invoice = User(fname=fname, lname=lname, zip_code=zip_code, email=email, created_at=created_date, password=password, phone=phone, phone2=phone2, address1=address1, address2=address2, city=city, state=state)
+
+
+    #flash(gettext(u"Update Succesfully!"))
+    invoices = Job.query.filter().all()  #job_id==invoice_id
+    return render_template("all_invoices.html", invoices=invoices)
 
 # @app.route('/all_invoices/', methods=['POST'])
 
@@ -433,7 +517,12 @@ def new_invoice():
     page = 'create_invoice'
 
  #TO DO:// LINK ALL TOGETHER
-    #or to create a relationship that will link customer, staff, job, etc
+@app.route('/create_invoice_form')
+def create_invoice_form():
+
+    page = 'create_new_user'
+    return render_template('create_new_invoice.html', page=page)
+
     name = request.form.get('name')
     description = request.form.get('description')
     job_id = request.form.get('job_id')
@@ -448,11 +537,10 @@ def new_invoice():
     date_paid = request.form.get('date_paid')
     date_sent = request.form.get('date_sent')
    
-  
-    #invoice = Invoice(name=name, description=description,job_id=job_id, 
-       #              location_address1=location_address1, location_address2=location_address2, location_city=location_city, location_state=location_state)
+    invoice = Invoice(name=name, description=description,job_id=job_id, 
+                    location_address1=location_address1, location_address2=location_address2, location_city=location_city, location_state=location_state)
    
-    #db.session.add(invoice)
+    db.session.add(invoice)
    
     db.session.commit()
     
@@ -462,9 +550,20 @@ def new_invoice():
     
     return render_template('invoice_form.html', page=page)
 
-@app.route('/create_invoice/', methods = ['GET', 'POST'])
-def create_invoice():
+
+@app.route('/create_invoice_process', methods = ['GET', 'POST'])
+def create_invoice_process():
     task = raw_input("Enter 'n' to create new invoice, press 'q' to exit: ")
+
+    product_number = request.form.get('product_number')
+    product_quantity = request.form.get('product_quantity')
+    product_price = request.form.get('product_price')
+
+    product_number = int(float(product_number))
+    product_quantity = int(float(product_quantity))
+    product_price = int(float(product_price))
+
+    product_total = product_price * product_quantity
 
     if (task == 'n'):
         product_list = []
@@ -488,8 +587,10 @@ def create_invoice():
                                          "to be purchased: ")
                         code = single_product[0]
                         product_name = single_product[1]
-                        price = float(single_product[2])
-                        total = float((price) * int(quantity))
+                        price = int(float(single_product[2]))
+                        total = int(float((price) * int(quantity)))
+                        # price = float(single_product[2])
+                        # total = float((price) * int(quantity))
                         product_list.append(product_name)
                         quantity.append(quantity)
                         product_price.append(total)
@@ -504,6 +605,7 @@ def create_invoice():
 
         db.session.add(invoice)
         db.session.commit()
+
         return redirect(url_for('show_invoice'))
 
     return render_template("invoice_form.html")

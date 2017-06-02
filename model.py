@@ -136,7 +136,7 @@ class Job_Product(db.Model):
                       autoincrement=True)
     product_id = db.Column(db.Integer(), db.ForeignKey('product.product_id', ondelete='CASCADE'))
     job_id = db.Column(db.Integer(), db.ForeignKey('jobs.job_id', ondelete='CASCADE'))
-    quantity = db.Column(db.Integer(), nullable=True)
+    #quantity = db.Column(db.Integer(), nullable=True)
 # ----------------------
 
 
