@@ -81,10 +81,10 @@ class Product(db.Model):
     product_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     product_name = db.Column(db.String(), nullable=True)
     product_number = db.Column(db.String(10))
-    description = db.Column(db.Unicode(255))
-    product_type = db.Column(db.Unicode(100))
+    description = db.Column(db.String(255))
+    product_type = db.Column(db.String(100))
     price = db.Column(db.DECIMAL(10, 2))
-    image_url = db.Column(db.Unicode(500))
+    image_url = db.Column(db.String(500))
     created_at = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
     module_abbreviation =db.Column(db.String(4), nullable=True)
@@ -96,7 +96,6 @@ class Job(db.Model):
     __tablename__="jobs"
 
     job_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    quantity = db.Column(db.Integer(), nullable=True)
     module_abbreviation = db.Column(db.String(4), nullable=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=True)
@@ -137,14 +136,14 @@ class Job_Product(db.Model):
                       autoincrement=True)
     product_id = db.Column(db.Integer(), db.ForeignKey('product.product_id', ondelete='CASCADE'))
     job_id = db.Column(db.Integer(), db.ForeignKey('jobs.job_id', ondelete='CASCADE'))
-
+    quantity = db.Column(db.Integer(), nullable=True)
 # ----------------------
 
 
 def seed_data():
 
     role_1=Role_ID(name='admin', description='master')
-    role_2=Role_ID(name='estimator', description='staff estimator')
+    role_2=Role_ID(name='staff', description='staff')
     role_3=Role_ID(name='customer', description='customer')
 
     db.session.add_all([role_1, role_2, role_3])
@@ -176,12 +175,19 @@ def seed_data():
     db.session.add_all([job_1, job_2, job_3, job_4, job_5, job_6])
     db.session.commit()
 
-    product_1=Product(product_number='12345678', product_name='good product')
-    product_2=Product(product_number='11111111', product_name='big product')
-    product_3=Product(product_number='22222222', product_name='small product')
-    product_4=Product(product_number='33333333', product_name='bigger product')
-    product_5=Product(product_number='44444444', product_name='biggest product')
-    product_6=Product(product_number='42525252', product_name='biggest product')
+    product_1=Product(product_number='12345678', product_name='Depends on Industry',
+        price=29.96,product_type='New',description='extremely descriptive desription')
+    product_2=Product(product_number='11111111', product_name='Industry Dependent',
+        price=13.99,product_type='NOS',description='extremely descriptive desription')
+    product_3=Product(product_number='22222222', product_name='Proprietary to Industry',
+        price=23.42,product_type='New',description='extremely descriptive desription')
+    product_4=Product(product_number='33333333', product_name='Proprietary Custom Job',
+        price=9.99,product_type='New',description='extremely descriptive desription')
+    product_5=Product(product_number='44444444', product_name='Proprietary Item',
+        price=5.00,product_type='New',description='extremely descriptive desription')
+    product_6=Product(product_number='42525252', product_name='Item Custom Job',
+        price=3.50,product_type='Special Order',description='extremely descriptive desription')
+
 
     db.session.add_all([product_1, product_2, product_3, product_4, product_5, product_6])
     db.session.commit()

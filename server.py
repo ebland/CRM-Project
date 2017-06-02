@@ -215,7 +215,7 @@ def job_detail(job_id):
     """Show User Information"""
    
     job = Job.query.filter_by(job_id=job_id).first()
-    
+    # TO DO: Query for all products and pass into render template 
     return render_template('job_detail.html', job=job)   
 
 
@@ -223,32 +223,49 @@ def job_detail(job_id):
 def job_form():
     """Create Job"""
     
+    roles = Role_ID.query.all()
+    users = User.query.all()
+
+    staff_list =[]
+    customer_list = []
+
+    for user in users:
+        if Role_ID.query.get(2) in user.roles:
+            staff_list.append(user)
+        if Role_ID.query.get(3) in user.roles:
+            customer_list.append(user)    
+
+    return render_template('job_form.html', roles=roles, staff_list=staff_list,
+                           customer_list=customer_list)  
+
+#TO DOoOOOOOO
+@app.route('/job_update_process', methods=['POST'])
+def update_job():
+    pass
+
+
+@app.route('/create_job_process', methods=['POST'])
+def create_new_job():
+    """Create New Job."""
+
+    job_id = request.form.get('job_id')
+    quantity = request.form.get('quantity')
     name = request.form.get('name')
     description = request.form.get('description')
     user_id = request.form.get('user_id')
     customer_id = request.form.get('customer_id')
-    created_date = datetime.datetime.now()
     job_location = request.form.get('job_location')
+    total = request.form.get('total')
 
-    product = Product(name=name, description=description, 
-                      user_id=user_id, 
-                      customer_id =customer_id , 
-                      created_date=created_date, job_location=job_location)
+    job = Job(job_id=job_id, quantity=quantity, name=name, description=description, 
+                      user_id=user_id, customer_id =customer_id , 
+                      job_location=job_location, total=total)
 
     db.session.add(job)
     db.session.commit()
 
     flash("Job added successfully!!!")
     
-    return redirect('/all_jobs')
-    
-
-    return render_template('job_form.html')  
-
-@app.route('/create_job_process', methods=['POST'])
-def create_new_job():
-    """Create New Job."""
-
     return redirect('/all_jobs')
 
 
