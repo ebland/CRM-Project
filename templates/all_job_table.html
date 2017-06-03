@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+<!-- Content -->
+{% block content_header %}
+{% include "content_header.html" %} <!-- Content: Header -->
+{% endblock content_header %}
+
+
+{% block content %}
+<div page-header>
+    <h4 class="page-header">Manage Jobs </h4>
+</div>
+
+
+
+{% if jobs|length == 0 %}
+
+<h1>Invoices <a href="/create_job_form" class='btn btn-mini btn-primary'>New Job</a></h1>
+
+
+{% else %}
+<h1>Invoices <a href="/create_invoice_form" class='btn btn-mini btn-primary'>New Job</a></h1>
+
+<div class="workspace-inner">
+    <table class="table data-list invoice-data-list">
+        <thead class="data-list-header">
+        <td class="col due">Due date</td>
+        <td class="col ref">Job Name</td>
+        <td class="col ref">Job Number</td>
+        <td class="col name">Customer</td>
+        <td class="col total">Total</td>
+        <td class="col total">Update</td>
+        <td class="col total">Delete</td>
+        </thead>
+        <tbody>
+        {% for job in jobs %}
+        <tr class="clickable" data-id="{{ job.job_id }}">
+            <td class="col due">{{ job.job_id }}</td>
+            <td class="col due">{{ job.name }}</td>
+            <td class="col ref">{{ job.user.lname }}</td>
+            <td class="col name">{{ job.customer.lname}} {{ job.customer.fname }} <br></td>
+            <td class="col total">{{ job.total }}</br></td>
+            <td class="col total"><h1> <a href="/job_update/{{job.job_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
+            <td class="col total"><h1> <a href="/job_delete/{{job.job_id }}" class='btn btn-mini btn-primary'>Delete</a></h1></br></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+{% endif %}
+
+
+
+
+{%- endblock content %}

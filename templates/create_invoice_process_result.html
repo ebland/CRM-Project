@@ -1,0 +1,30 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<ul class="breadcrumb">
+  <li><a href="/create_invoice_form">Back to Create New Invoice</a> <span class="divider">/</span></li>
+</ul>
+
+<div class="form-group">
+  <div id="doesn't matter">
+    <form action="/create_invoice_process" method="POST">
+      <div class="header">Invoice for New Product</div>
+      <div class="fields">
+
+        <label>Product Number:</label>
+        {{ product_number }} <br>
+
+        <b>Product Quantity</b> X <b>Product Price</b> = <b>Invoice Total</b> <br>
+
+        ${{ product_quantity }}  x ${{ product_price }} = ${{ product_total }}
+
+      </div>
+    </form>
+  </div>
+  </form>
+
+</div>
+
+{% endblock %}

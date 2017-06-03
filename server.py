@@ -59,38 +59,28 @@ def login():
 def login_process():
     """Logs in a user"""
     
-    # 1. set email and password from form 
     email = request.form.get('email')
     password = request.form.get('password')
 
-    # 2a get counts
     user = User.query.filter_by(email=email).first()
-
-   
-    #3. handle use cases for record matched or not
     if not user:  
-        #return "DEBUG: no User  "
     
         flash('User not found!')
         return render_template("homepage.html")
     elif email == str(user.email):
      
-        # set session
         session['user_id'] = user.user_id
         session['role_ids'] = []
 
-
-        
     for role in user.roles:
         session['role_ids'].append(role.role_id)
     flash('User: {} has been logged in!'.format(email) )
 
-    # Role ID 3 is a customer
     if  3 in session['role_ids']:
         user = User.query.filter_by(email=email).first()
         jobs = Job.query.filter_by(customer_id=user.user_id).all()  
         return render_template('homepage.html', current_user=user, jobs=jobs)      
-    # Role ID 1 is admin
+    
     if  1 in session['role_ids']:
         user = User.query.filter_by(email=email).first()
         jobs = Job.query.filter_by(customer_id=user.user_id).all()
@@ -136,7 +126,7 @@ def logout():
         return render_template('homepage.html')
 
 
-@app.route('/show_user/<user_id>')
+@app.route('/show_user/<int:user_id>')
 def show_user(user_id):
     """Shows Detailed information of Chosen User"""
 
