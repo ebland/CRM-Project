@@ -55,9 +55,44 @@
      
     </table>
         
-        Detailed product Information for Administration Only:
-        <!--create this in model to be imported here 5/17/17-->
-        <!-- Employee/Staff: {{ is_Staff }} -->
+        Detailed Pproductroduct Information for Administration Only:
+        <div class="form-group">
+    <div id="product_update_process">
+        <form action="/product_update_process" method="POST">
+          <div class="header">Instructions: Fill in all information then select "Update Product".</div>  
+          <div class="fields">
+            Product Name:<br>
+            <input type="text" name="name" value='{{ product.product_name  }}' required><br>
+            Product Description:<br>
+            <input type="text" name="description" value='{{ product.description }}'required><br>
+            Product Number:<br>
+            <input type="text" name="location" value='{{ product.product_number}}'><br> 
+                <form method="post">
+                    <label><div>Assigned Staff</div>
+                        <input type="text" name="user" value="{{ user }}">
+                    </label>
+                    <label><div>User Role</div>
+                        <select>{% for role in roles %}
+                          <option value="{{ role.role_id }}">{{ role.name }}</option>
+                                 {% endfor %}
+                        </select>
+                     </label>
+                
+                    <input type="text" name="staff"><br> 
+                    Customer:
+                    <select>{% for customer in customer_list %}
+                          <option value="{{ customer.user_id }}">
+                            {{ customer.fname }} {{ customer.lname }}
+                          </option>
+                            {% endfor %}
+                    </select>
+                    Staff:
+                    <select>{% for staff in staff_list %}
+                          <option value="{{ staff.user_id }}">
+                            {{ staff.fname }} {{ staff.lname }}
+                          </option>
+                        {% endfor %}
+                    </select>
          RoleID/Permissions: 
 
         <div class="field">

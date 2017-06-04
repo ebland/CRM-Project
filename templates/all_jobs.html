@@ -11,18 +11,21 @@
   {% if jobs|length == 0 %}
 Invoices New Job
 
+<div class="field">
+
+          <a href='/job_form'><button class="btn btn-primary" type="button">Create New Job</button></a>
+         
+        </div>
 
 Invoices New Job
 
 {% else %}
 
 <div class="field">
-
           <a href='/job_form'><button class="btn btn-primary" type="button">Create New Job</button></a>
-         
         </div>
 <ul>
-  {% for job in jobs %}
+<!--   {% for job in jobs %}
   <li>{{ job.name }}</li>
     <li>
       <a href="/jobs/{{ job.job_id }}">
@@ -30,7 +33,7 @@ Invoices New Job
       </a>
      </li>
       {% endfor %}
- 
+  -->
 
 <div class="container" ng-app="tabApp">
   <div class="row" ng-controller="TabController">
@@ -73,7 +76,7 @@ Invoices New Job
         {% for job in jobs %}
         <tr class="clickable" data-id="{{ job.job_id }}">
             <td class="col due">{{ job.job_id }}</td>
-            <td class="col due">{{ job.name }}</td>
+            <td class="col due"> <a href="/jobs/{{ job.job_id }}" class='btn btn-mini btn-primary'>{{ job.name }}</a></td>
             <td class="col ref">{{ job.user.lname }}</td>
             <td class="col name">{{ job.customer.lname}} {{ job.customer.fname }} <br></td>
             <td class="col total">{{ job.total }}</br></td>
@@ -88,11 +91,10 @@ Invoices New Job
               <input type="radio" name="status" value="Closed">Closed</br>
               <input name='job_id' value='{{job.job_id }}' hidden>
               <input type='submit' value='submit'>Submit</br>
+              </form> 
 
-            </form> 
-
-          
-            <td class="col total"><h1> <a href="/job_update_process/{{job.job_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
+            <td class="col total"><h1> 
+              <a href="/jobs/{{ job.job_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
             <td class="col total"><h1> <a href="/job_delete/{{job.job_id }}" class='btn btn-mini btn-primary'>Delete</a></h1></br></td>
         </tr>
         {% endfor %}

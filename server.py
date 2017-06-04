@@ -6,6 +6,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, request, flash, redirect, url_for, session
 from model import connect_to_db, db, Job, Product, User, Role_ID, Job_Product, Product
 
+
 app = Flask(__name__)
 
 app.secret_key = "ABC"
@@ -23,9 +24,11 @@ def index():
     return render_template("homepage.html")
 
 
-@app.route('/search')
-def search():    
-    return render_template("search_result_form.html" )
+# @app.route('/search')
+# def search(): 
+#    """"Search Site with Keyword in SideBar."""
+
+#     return render_template('search_result_form.html')
 
 
 @app.route('/search_process', methods=['POST'])
@@ -52,6 +55,7 @@ def search_process():
 @app.route('/login')
 def login():
     """Logs in a user"""
+
     return render_template('login_form.html')
  
 
@@ -95,22 +99,12 @@ def login_process():
                                productcount=productcount,
                                invoicecount=invoicecount)
 
-    # Role ID  2 is Estimator
     if  2 in session['role_ids']:
         user = User.query.filter_by(email=email).first()
         jobs = Job.query.filter_by(customer_id=user.user_id).all()
         return render_template('homepage.html', current_user=user)       
     
     return render_template('login_form.html')
-
-
-@app.route('/all_staff')
-def all_staff():
-    """Show List of All Staff in ECRM."""
-    #TOOOO DOOOOOOOOOOO QUEARY ONLY ROLE_ID 1 AND 3 AS STAFF
-    staff = User.query.all()
-
-    return render_template("all_staff.html", staff=staff)
 
 
 @app.route('/logout')
@@ -125,6 +119,10 @@ def logout():
     else:
         return render_template('homepage.html')
 
+@app.route('/delete_user')
+def delete_user():
+    """Deletes a user"""
+    return render_template('delete_user_form.html')
 
 @app.route('/show_user/<int:user_id>')
 def show_user(user_id):
@@ -158,12 +156,6 @@ def create_new_user():
     """Creates a new user"""
 
     return render_template('create_new_user.html')
-
-
-@app.route('/delete_user')
-def delete_user():
-    """Deletes a user"""
-    return render_template('delete_user_form.html')
  
 
 @app.route('/create_new_user_process', methods=["GET", "POST"])
@@ -200,6 +192,78 @@ def new_user():
         return render_template('create_new_user.html')
 
 
+@app.route('/update_user',  methods=[ "POST"])
+def update_user():
+
+    user_id = request.form.get('id')
+    email = request.form.get('email')
+    fname = request.form.get('fname')
+    lname = request.form.get('lname')
+    #return user_lname
+    
+    #get user you clicked on and passed user_id in URL
+    user = User.query.filter(user_id == user_id,email == email, fname==fname, lname==lname  ).first()
+
+
+    return render_template('update_user.html', user=user)
+
+
+@app.route('/update_user_process', methods=['POST'])
+def update_user_process():
+    """Update Existing User."""
+
+    page = 'update_user_process'
+
+    if request.method == "POST":
+        user_id = request.form.get('user_id')
+        fname = request.form.get('fname')
+        lname = request.form.get('lname')
+        zip_code = request.form.get('zipcode')
+        email = request.form.get('email')
+        created_date = datetime.datetime.now()
+        password = request.form.get('password')
+        phone = request.form.get('phone')
+        phone2 = request.form.get('phone2')
+        address1 = request.form.get('address1')
+        address2= request.form.get('address2')
+        city = request.form.get('city')
+        state = request.form.get('state')
+
+        #get user you clicked on and passed user_id in URL
+        user = User.query.filter(user_id == user_id,email == email ).first()
+
+        #reset found user record with form posted values
+        user.fname=fname
+        user.lname=lname
+        user.zip_code=zip_code
+        user.email=email
+        user.created_at=created_date
+        user.password=password
+        user.phone=phone
+        user.phone2=phone2
+        user.address1=address1
+        user.address2=address2
+        user.city=city
+        user.state=state
+        # update db record
+        db.session.add(user)
+        db.session.commit()
+
+        flash("User was updated successfully!!!")
+        user = User.query.filter(user_id == user_id,email == email )
+        users = User.query.all()
+
+        return render_template("all_users.html", users=users)
+
+@app.route('/all_staff')
+def all_staff():
+    """Show List of All Staff in ECRM."""
+    #TOOOO   TO DO TO DO DOOO6/2/17 QUEARY ONLY ROLE_ID 1 AND 3 AS STAFF
+    staff = User.query.all()
+
+    return render_template("all_staff.html", staff=staff)
+
+
 @app.route('/all_jobs')
 def job_list():
     """Show List of All Jobs in ECRM."""
@@ -207,6 +271,7 @@ def job_list():
     jobs = Job.query.all()
 
     return render_template("all_jobs.html", jobs=jobs)
+
 
 @app.route('/all_job_table')
 def job_table():
@@ -219,10 +284,10 @@ def job_table():
 
 @app.route('/jobs/<int:job_id>')
 def job_detail(job_id):
-    """Show User Information"""
+    """Show Job Information"""
    
     job = Job.query.filter_by(job_id=job_id).first()
-    # TO DO: Query for all products and pass into render template 
+
     return render_template('job_detail.html', job=job)   
 
 
@@ -249,15 +314,20 @@ def job_form():
 @app.route('/job_update_process', methods=['POST'])
 def update_job():
 
-    status = request.form.get('status')
     job_id = request.form.get('job_id')
-
+    name = request.form.get('name')
+    #return str(name)
+ 
     if job_id is not None:
         job_id = int(job_id)
+    
+    job = Job.query.filter(job_id==job_id).first()
+    #return str(job.job_id)
+    #reset record to form job name
+    job.name = str(name)
 
-    job = Job.query.filter_by(job_id=job_id).first()
-    job.status = status
-  
+     
+    # update db record
     db.session.add(job)
     db.session.commit()
 
@@ -266,21 +336,24 @@ def update_job():
     return render_template("all_jobs.html", jobs=jobs)
 
 
+
 @app.route('/job_delete/<int:job_id>', methods=["GET"])
 def job_delete(job_id):
 
-    job_to_delete = 0
-    job_to_delete = request.form.get('job_id')
-    if job_to_delete is not None and code.isnumeric():
-        job_t_delete = int(job_to_delete)
+    # job_to_delete = 0
+    # job_to_delete = request.form.get('job_id')
+    # if job_to_delete is not None and code.isnumeric():
+    #     job_t_delete = int(job_to_delete)
 
     #invoice = Invoice.query.filter(Invoice_number==invoice_id).first()
-    # job = Job.query.filter_by(job_id=code).first()  #job_id==invoice_id
+    job = Job.query.filter_by(job_id=job_id).first()  #job_id==invoice_id
+    #return str(job.job_id)
+
     #session.query(MenuItem).filter_by(id=menu_id)
     db.session.delete(job)
     db.session.commit()
 
-    flash(gettext(u"Delete Succesfully!"))
+    #flash(gettext(u"Delete Succesfully!"))
 
     jobs = Job.query.filter().all()   
 
@@ -288,11 +361,10 @@ def job_delete(job_id):
 
 
 @app.route('/create_job_process', methods=['POST'])
-def create_new_job():
+def create_new_job(job_id):
     """Create New Job."""
 
     job_id = request.form.get('job_id')
-    # quantity = request.form.get('quantity')
     name = request.form.get('name')
     description = request.form.get('description')
     user_id = request.form.get('user_id')
@@ -301,14 +373,14 @@ def create_new_job():
     total = request.form.get('total')
 
     job = Job(job_id=job_id, name=name, description=description, 
-                      user_id=user_id, customer_id =customer_id , 
+                      user_id=user_id, customer_id =customer_id, 
                       job_location=job_location, total=total)
 
     db.session.add(job)
     db.session.commit()
 
     flash("Job added successfully!!!")
-    
+        
     return redirect('/all_jobs')
 
 
@@ -321,9 +393,29 @@ def product_list():
     return render_template("all_products.html", products=products)
 
 
+@app.route('/product_form')
+def product_form():
+    """Create Job"""
+    #return "1"
+    roles = Role_ID.query.all()
+    users = User.query.all()
+
+    staff_list =[]
+    customer_list = []
+
+    for user in users:
+        if Role_ID.query.get(2) in user.roles:
+            staff_list.append(user)
+        if Role_ID.query.get(3) in user.roles:
+            customer_list.append(user)    
+
+    return render_template('product_form.html', roles=roles, staff_list=staff_list,
+                           customer_list=customer_list)  
+
+
 @app.route('/product_detail/<int:product_id>')
 def product_detail(product_id):
-    """Show User Information"""
+    """Show Product Information"""
    
     product = Product.query.filter_by(product_id=product_id).first()
     
@@ -334,7 +426,16 @@ def product_detail(product_id):
 def create_product_form():
     """Show product form."""
     
-    return render_template('product_form.html')  
+    return render_template('product_form.html') 
+
+
+@app.route('/products/<int:product_id>')
+def products(product_id):
+    """Show Product Information"""
+   
+    product = Product.query.filter_by(product_id=product_id).first()
+
+    return render_template('product_detail.html', product=product)   
 
 
 @app.route('/create_product_process', methods=['POST'])
@@ -357,8 +458,49 @@ def create_new_product():
     db.session.commit()
 
     flash("Product added successfully!!!")
+
+    products = Product.query.all()
+
+    return render_template("all_products.html", products=products)
+  
+ 
+@app.route('/product_update_process', methods=['POST'])
+def update_product():
+
+    product_id = request.form.get('product_id')
+    name = request.form.get('name')
+    description = request.form.get('description')
+    product_number = request.form.get('description')
     
-    return redirect('/all_products')
+ 
+    if product_id is not None:
+        product_id = int(product_id)
+    
+    product = Product.query.filter(product_id==product_id).first()
+    product.product_name  = str(name)
+    product.description = str(description)
+    product.description = product_number
+     
+
+    db.session.add(product)
+    db.session.commit()
+
+    products = Product.query.all()
+
+    return render_template("all_products.html", products=products)
+
+
+@app.route('/product_delete/<int:product_id>', methods=["GET"])
+def product_delete(product_id):
+
+    product = Product.query.filter_by(product_id=product_id).first()  
+  
+    db.session.delete(product)
+    db.session.commit()
+
+    products = Product.query.filter().all()   
+
+    return render_template("all_products.html", products=products)
 
 
 @app.route('/invoice_detail/<int:job_id>')
@@ -373,8 +515,9 @@ def invoice_detail(job_id):
 @app.route('/all_invoices')
 def invoice_list():
     """Show List of All Invoices in ECRM."""
-    
-    invoices = Job.query.filter_by(status='invoice_sent').all()
+    return "1"
+
+    job = job.query.filter_by(status='invoice_sent').all()
 
     return render_template("all_invoices.html", invoices=invoices)
 
@@ -387,7 +530,7 @@ def invoice_form():
 
     return render_template("invoice_form.html", invoices=invoices)
 
-
+ 
 @app.route('/process_add_customer', methods=["GET", "POST"])
 def add_customer_to_db():
     """Add customer to DB."""
@@ -504,13 +647,13 @@ def invoice_update(invoice_id):
 def new_invoice():
     
     invoice_id=()
-    page = 'create_invoice'
+    page = 'create_new_invoice'
 
  #TO DO:// LINK ALL TOGETHER
 @app.route('/create_invoice_form')
 def create_invoice_form():
 
-    page = 'create_new_user'
+    page = 'create_invoice'
     return render_template('create_new_invoice.html', page=page)
 
     name = request.form.get('name')
@@ -549,11 +692,11 @@ def create_invoice_process():
     product_quantity = request.form.get('product_quantity')
     product_price = request.form.get('product_price')
 
-    product_number = int(float(product_number))
-    product_quantity = int(float(product_quantity))
-    product_price = int(float(product_price))
+    product_number = "product_number"
+    product_quantity = "product_quantity"
+    product_price = "product_price"
 
-    product_total = product_price * product_quantity
+    product_total = int(product_price) * int(product_quantity)
 
     if (task == 'n'):
         product_list = []
@@ -599,6 +742,35 @@ def create_invoice_process():
         return redirect(url_for('show_invoice'))
 
     return render_template("invoice_form.html")
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    f = request.files['data_file'].read().decode('utf-8')
+
+    # - debugging
+    # file_contents = codecs.open(file_contents, "r", encoding='utf-8', errors='ignore')
+    # f = codecs.open(request.files['data_file'], "r", encoding='utf-8', errors='ignore')
+    # f = codecs.decode(request.files['data_file'], 'utf-8', 'ignore')
+    if not f:
+        flash("Error. File upload attempt detected, but no file found. Please contact the application administrator.",
+              'danger')
+
+    # To do: Get the conditional below to work, and remove the placeholder 'if True'.
+    # if type(f) == '.csv':
+    if True:
+        f = csv2json_conversion(f)
+        import_data = Import_Data(f)
+        data_context = request.form['form_submit']
+        valid_schema = validate_columns(import_data, data_context)
+        if valid_schema == True:
+            validated_data = validate_import(current_user, import_data, data_context)
+            if validated_data:
+                add_to_db(validated_data, data_context)
+    else:
+        flash('Error. Incorrect file type. The only file types accepted are: .csv', 'danger')
+
+    return redirect(request.referrer)
 
 if __name__ == "__main__":
     app.debug = True

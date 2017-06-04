@@ -1,32 +1,111 @@
+
 {% extends 'base.html' %}
 {% block content %}
+  {% block content_header %}
+  {% include "content_header.html" %} 
+  {% endblock content_header %}
+<h2>All Active products</h2>
+  <div page-header>
+    <h4 class="page-header">Manage products </h4>
+</div>
 
-<h2>All Products</h2>
-<a href='/new_product_form'><button class="btn btn-primary" type="button">Add Product</button></a>
+  {% if products|length == 0 %}
+Invoices New product
+
+<div class="field">
+
+          <a href='/product_form'><button class="btn btn-primary" type="button">Create New product</button></a>
+         
+        </div>
+
+Invoices New product
+
+{% else %}
+
+<div class="field">
+          <a href='/product_form'><button class="btn btn-primary" type="button">Create New product</button></a>
+        </div>
 <ul>
-  {% for product in products %}
-  <li>{{ product.product_id }}</li>
-    <li>
-      <a href="/product_detail/{{ product.product_id }}">
-        {{ product.description}} {{ product.product_number }} {{ product.price }}
-      </a>
-     </li>
+ 
 
 <div class="container" ng-app="tabApp">
   <div class="row" ng-controller="TabController">
     <div class="col-md-4">
       <ul class="nav nav-pills nav-stacked">
         <li ng-class="{ active: isSet(1) }">
-            <a href ng-click="setTab(1)">In Stock</a>
+            <a href ng-click="setTab(1)">Home</a>
         </li>
         <li ng-class="{ active: isSet(2) }">
-            <a href ng-click="setTab(2)">Inventory</a>
+            <a href ng-click="setTab(2)">Profile</a>
         </li>
         <li ng-class="{ active: isSet(3) }">
-            <a href ng-click="setTab(3)">Order</a>
+            <a href ng-click="setTab(3)">All products</a>
         </li>
       </ul>
     </div>
-    {% endfor %} 
-  </ul>
+  
+{% endif %}
+
+{% if products|length == 0 %}
+
+<h1>Invoices <a href="/create_product_form" class='btn btn-mini btn-primary'>New product</a></h1>
+
+
+{% else %}
+<h1>Invoices <a href="/product_form" class='btn btn-mini btn-primary'>New product</a></h1>
+
+
+<!--  product_id |      product_name       | product_number |           description            | product_type  | price | image_url | created_at | modified | module_abbreviation  -->
+
+<div class="workspace-inner">
+    <table class="table data-list invoice-data-list">
+        <thead class="data-list-header">
+        <td class="col due">product_id  </td>
+        <td class="col ref">product Name</td>
+        <td class="col ref">product Number</td>
+        <td class="col name">description</td>
+        <td class="col total">price</td>
+        <td class="col total">Update</td>
+        <td class="col total">Delete</td>
+        </thead>
+        <tbody>
+        {% for product in products %}
+        <tr class="clickable" data-id="{{ product.product_id }}">
+            <td class="col due">{{ product.product_id }}</td>
+            <td class="col due"> <a href="/products/{{ product.product_id }}" class='btn btn-mini btn-primary'>{{ product.product_name  }}</a></td>
+            <td class="col ref">{{ product.product_number }}</td>
+            <td class="col name"> {{ product.description }}   <br></td>
+            <td class="col total">{{ product.price }}</br></td>
+           <td class="col status">
+
+             <form action="/product_update_process" method='POST'>
+              <input type="radio" name="status" value="active">Active<br>
+              <input type="radio" name="status" value="quote_sent">Quote Sent<br>
+              <input type="radio" name="status" value="quote_requested">Quote Requested</br>
+              <input type="radio" name="status" value="invoice_sent">Invoice Sent<br>
+              <input type="radio" name="status" value="completed">Completed<br>
+              <input type="radio" name="status" value="Closed">Closed</br>
+              <input name='product_id' value='{{product.product_id }}' hidden>
+              <input type='submit' value='submit'>Submit</br>
+              </form> 
+
+            <td class="col total"><h1> 
+              <a href="/products/{{ product.product_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
+            <td class="col total"><h1> <a href="/product_delete/{{product.product_id }}" class='btn btn-mini btn-primary'>Delete</a></h1></br></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+</div>
+{% endif %}
+ 
+ 
 {% endblock %}
+  </ul>
+
+
+
+
+ 

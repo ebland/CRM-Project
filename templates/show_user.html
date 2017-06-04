@@ -12,70 +12,89 @@
 {% endblock content_header %}
 {% block content %}
   {% if user in session %}
-<form action="/show_user", methods=["GET", "POST"]>
 
-<h2>User Information:</h2>
-<ul>
-    <li>
-        {{ user.email}} ({{user.user_id}})
-    </li> 
-    {% endif %}
-</ul>
-</form>
 
-  <ul class="breadcrumb">
-    <li>  <a href="/show_user/{{ user.user_id }}">
-        {% if "user_id" in session and 1 in session["role_ids"]%}
-       </a> <span class="divider">User Info</span></li>
-    <li class="active">{{ user.fname }} - {{ user.lname }}</li>  
-  </ul>
- 
+<script>
+  function submitForm(){
+    document.getElementById("showuser").submit();
+  }
+</script>
+
+
+
+  <form   action="/show_user", methods=["GET", "POST"]>
+
+    <h2>User Information:</h2>
+    <ul>
+        <li>
+            {{ user.email}} ({{user.user_id}})
+        </li> 
+        {% endif %}
+    </ul>
+
+
+    <ul class="breadcrumb">
+      <li>  <a href="/show_user/{{ user.user_id }}">
+          {% if "user_id" in session and 1 in session["role_ids"]%}
+         </a> <span class="divider">User Info</span></li>
+      <li class="active">{{ user.fname }} - {{ user.lname }}</li>  
+    </ul>
+  </form>
+
+
   <div class="show-user-information">
 
-<div class="header">User Details</div>
-  <div class="fields">
-      <table class="table">
-        <tr>
-          <th>First Name: </th>
-          <th>Last Name: </th>
-          <th>Email Address:  </th>
-          <th>Address Line 1: </th>
-          <th>Address Line 2: </th>
-          <th>City:</th>
-          <th>State: </th>
-          <th>Zipcode: </th>
-          <th>Department: </th>
-          <th>Birthday:: </th>
-          <th>Job Title: </th>
-          <th>User Status:</th>
+    <div class="header">User Details</div>
+      <div class="fields">
+          <table class="table">
+            <tr>
+              <th>First Name: </th>
+              <th>Last Name: </th>
+              <th>Email Address:  </th>
+              <th>Address Line 1: </th>
+              <th>Address Line 2: </th>
+              <th>City:</th>
+              <th>State: </th>
+              <th>Zipcode: </th>
+              <th>Department: </th>
+              <th>Birthday:: </th>
+              <th>Job Title: </th>
+              <th>User Status:</th>
 
-      </tr>
-       <tr data-toggle="modal">
-          <td>{{ user.fname }}</td>
-          <td>{{ user.lname }}</td>
-          <td>{{ user.email}}</td>
-          <td>{{ user.address1 }}</td>
-          <td>{{ user.address2 }}</td>
-          <td>{{ city }}, {{ state }} {{ zip_code}}</td>
-          <td> {{ user.job_title }}</td>
-          <td>{{ user.department }}</td>
-          <td> {{ user.birthdate }}</td>
-          <td> {{ user.active }}</td>
-        </tr>
-     
-    </table>
+          </tr>
+           <tr class='clickable' data-toggle="modal" data-id="{{ user.user_id }}">
+              <td>{{ user.fname }}</td>
+              <td>{{ user.lname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.address1 }}</td>
+              <td>{{ user.address2 }}</td>
+              <td>{{ city }}, {{ state }} {{ zip_code}}</td>
+              <td>{{ user.job_title }}</td>
+              <td>{{ user.department }}</td>
+              <td>{{ user.birthdate }}</td>
+              <td>{{ user.active }}</td>
+            </tr>
+            <form id = "showuser"  action="/update_user" method="POST">
+              <input type="hidden" name="id" value="{{ user.user_id }}">
+              <input type="hidden" name="email" value="{{ user.email }}">
+               <input type="hidden" name="fname" value="{{ user.fname }}">
+              <input type="hidden" name="lname" value="{{ user.lname }}">
+              <div class="field">
+                <button class="btn btn-primary" onClick="submitForm();"  type="submit">Update User </button>
+              </div>
+            </form>
+          </div>
+        </table>
+            
+            Detailed User Information for Administration Only:
+         <!-- SEPARATE STAFF FROM CUTOMERS AND LIST SEPARATELY ON SAME PAGE -->
+             RoleID/Permissions: 
+      <!-- /TO DOOOOOOOOO TIE IN DELETE_BUTTON ON FORM -->
         
-        Detailed User Information for Administration Only:
-        <!--create this in model to be imported here 5/17/17-->
-        <!-- Employee/Staff: {{ is_Staff }} -->
-         RoleID/Permissions: 
+    </div> 
 
-        <div class="field">
-          <button class="btn btn-primary" type="submit">Update User</button>
-          <!-- Leslie I may need to tie this to a separate delete_form -->
-        </div>
-      </div>
-  </div> 
+
+ 
     {% endif %} 
   {% endblock content %}
 

@@ -1,10 +1,35 @@
-from flask_sqlalchemy import SQLAlchemy
 import datetime
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from flask_debugtoolbar import DebugToolbarExtension
 from flask import Flask
 db = SQLAlchemy()
+
+
+class Role_ID(db.Model):
+    """Role ID table."""
+
+    __tablename__="roles"
+
+    role_id = db.Column(db.Integer, 
+                      primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+    ######STATUS####### NEED TO CHECK TO SEE IF THIS IS WORKING RIGHT 6/2/17
+    active = db.Column(db.Boolean())
+    ######STATUS####### NEED TO CHECK TO SEE IF THIS IS WORKING RIGHT 6/2/17
+
+
+class User_Roles(db.Model):
+
+    __tablename__="user_roles"
+
+    user_role_id = db.Column(db.Integer, 
+                      primary_key=True,
+                      unique=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.user_id', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.role_id', ondelete='CASCADE'))
 
 
 class User(db.Model):
@@ -15,7 +40,6 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     role_id = db.Column(db.String(2), nullable=True)
-
     # Information
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)
@@ -32,45 +56,25 @@ class User(db.Model):
     state = db.Column(db.String(20), nullable=True)
     zip_code = db.Column(db.String(10), nullable=True)
     module_abbreviation =db.Column(db.String(4), nullable=True)
-    
-    ######STATUS#######
+    ###### STATUS ####### NEED TO CHECK TO SEE IF THIS IS WORKING RIGHT 6/2/17
     active = db.Column(db.Boolean())
-    ######STATUS#######
-
+    ###### STATUS #######
     created_at = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
+    ###### FOREIGN KEYS #######
 
+    ###    TOOOOOOOO  DOOOOOOOOOOO -figure out why mapper will not process FK
+    # customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'))
+    # job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    # invoice_id = db.Column(db.Integer, db.ForeignKey('invoice.id'))
+ 
     roles = db.relationship('Role_ID', secondary='user_roles',
                             backref=db.backref('users', lazy='dynamic'))
-
+   
     def __repr__(self):
         return '<User user_id=%d, email=%s>' % (self.user_id, self.email)
-
-
-class Role_ID(db.Model):
-    """Role ID table."""
-
-    __tablename__="roles"
-
-    role_id = db.Column(db.Integer, 
-                      primary_key=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
-    ######STATUS#######
-    active = db.Column(db.Boolean())
-    ######STATUS#######
-
-
-class User_Roles(db.Model):
-
-    __tablename__="user_roles"
-
-    user_role_id = db.Column(db.Integer, 
-                      primary_key=True,
-                      unique=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.user_id', ondelete='CASCADE'))
-    role_id = db.Column(db.Integer(), db.ForeignKey('roles.role_id', ondelete='CASCADE'))
-
 
 
 class Product(db.Model):
@@ -160,8 +164,6 @@ def seed_data():
     user_roles_staff=User_Roles(user_id=user2.user_id, role_id=role_2.role_id)
     user_roles_customer=User_Roles(user_id=user3.user_id, role_id=role_3.role_id)
 
-
-
     db.session.add_all([user_roles_admin, user_roles_staff, user_roles_customer])
     db.session.commit()
 
@@ -209,30 +211,41 @@ def connect_to_db(app):
     db.app = app
     db.init_app(app)
 
-#solution for address conflicts would be to use this as main then relate it to different modules 
-#rather than have separate addresses (duplicates) under same user/customer table....
+class Invoice(db.Model):
 
-# class address(): 
-#   address_id = db.Column(db.Integer(11), primary_key=True, nullable=False, autoincrement=True)
-#   owner_id = db.Column(db.Integer(11), nullable=False, unique=True)
-  
-#   address_type = db.Column(db.String(100), nullable=True, unique=True)
-#   address_1 = db.Column(db.String(50), nullable=False)
-#   address_2 = db.Column(db.String(50), nullable=True)
-#   state = db.Column(db.String(40), nullable=True)
-#   city = db.Column(db.String(40), nullable=True)
-#   country = db.Column(db.String(40), nullable=True)
-#   zip_code = dbColumn(db.String(10), nullable=True)
-#   date_created = db.Column(db.DateTime()),
-#   date_updated = db.Column(db.DateTime()),
-#   create_user_id = db.Column(db.Integer(11), nullable=False)
-#   update_user_id = db.Column(db.Integer(11), default= '0')
-#   create_ip_address = db.Column(db.String(15), nullable=False)
-#   update_ip = db.Column(db.String(15), nullable=False)
-#   module_abbreviation = db.Column(db.String(4), nullable=True)
-#   UNIQUE KEY owner_id (owner_id,owner_table,address_type),
-#   owner_id_single = db.Column(db.Integer(11), db.ForeignKey('owner_id.owner_id')) 
-#   owner_table= db.Column(db.String(30), nullable=True, unique=True, db.ForeignKey('owner_table.owner_table'))
+    __tablename__ ="invoice"
+
+    invoice_id = db.Column(db.Integer,
+                      primary_key=True,
+                      autoincrement=True)
+    customer_id = db.Column(db.ForeignKey(u'customer.customer_id'), nullable=False, index=True)
+    invoice_number = db.Column(db.Unicode(50), unique=True)
+    invoice_created_date = db.Column(db.DateTime(timezone=True), default=db.func.now())
+    invoice_due_date = db.Column(db.DateTime(timezone=True), default=db.func.now())
+    modified = db.Column(db.DateTime())
+    received_date = db.Column(db.DateTime())
+    description = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey(u'users.user_id'), index=True)
+   
+    # product = db.relationship('Invoice_Detail', back_populates="invoice")
+    customers = db.relationship('Customer', backref=db.backref('invoice'))
+
+
+class Invoice_Detail(db.Model):
+
+    __tablename__ ="invoice_detail"
+
+    invoice_detail_id = db.Column(db.Integer, primary_key=True, unique=True)
+
+    invoice_number = db.Column(db.Unicode(50), db.ForeignKey('invoice.invoice_number'))
+    product_number = db.Column(db.Unicode(50), db.ForeignKey('product.product_number'))
+    purchase_order_number = db.Column(db.Unicode(50))
+    created_at = db.Column(db.DateTime())
+    modified = db.Column(db.DateTime())
+
+    invoice = db.relationship('invoice', back_populates='products')
+    product = db.relationship('product', back_populates='invoices')
+
 
 
 if __name__=="__main__":

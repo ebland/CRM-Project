@@ -56,10 +56,64 @@
         </tr>
      
     </table>
-        
+        <form action="/job_update_process" method='POST'>
+              <input type="radio" name="status" value="active">Active<br>
+              <input type="radio" name="status" value="quote_sent">Quote Sent<br>
+              <input type="radio" name="status" value="quote_requested">Quote Requested</br>
+              <input type="radio" name="status" value="invoice_sent">Invoice Sent<br>
+              <input type="radio" name="status" value="completed">Completed<br>
+              <input type="radio" name="status" value="Closed">Closed</br>
+              <input name='job_id' value='{{job.job_id }}' hidden>
+              <input type='submit' value='submit'>Submit</br>
+        </form> 
         Detailed job Information for Administration Only:
-        <!--create this in model to be imported here 5/17/17-->
-        <!-- Employee/Staff: {{ is_Staff }} -->
+    <div class="form-group">
+    <div id="job_update_process">
+        <form action="/job_update_process" method="POST">
+          <div class="header">Instructions: Fill in all information then select "Update Job".</div>  
+          <div class="fields">
+            Project Name/Job Title:<br>
+            <input type="text" name="name" value='{{ job.name }}' required><br>
+            Job Description / Material List / Dims:<br>
+            <input type="text" name="description" value='{{ job.description }}'required><br>
+            Job Site:<br>
+            <input type="text" name="location" value='{{ job.job_location}}'><br> 
+                <form method="post">
+                    <label><div>Assigned Staff</div>
+                        <input type="text" name="user" value="{{ user }}">
+                    </label>
+                    <label><div>User Role</div>
+                        <select>{% for role in roles %}
+                          <option value="{{ role.role_id }}">{{ role.name }}</option>
+                                 {% endfor %}
+                        </select>
+                     </label>
+                
+                    <input type="text" name="staff"><br> 
+                    Customer:
+                    <select>{% for customer in customer_list %}
+                          <option value="{{ customer.user_id }}">
+                            {{ customer.fname }} {{ customer.lname }}
+                          </option>
+                            {% endfor %}
+                    </select>
+                    Staff:
+                    <select>{% for staff in staff_list %}
+                          <option value="{{ staff.user_id }}">
+                            {{ staff.fname }} {{ staff.lname }}
+                          </option>
+                        {% endfor %}
+                    </select>
+
+            <input class="button normal" type="submit" value="Update Job">
+            </form>
+            </div>
+        </form>
+      </div>
+    </form>
+
+  </div>
+
          RoleID/Permissions: 
     <h2>Product List</h2>
     {% for product in job.product %}
@@ -67,10 +121,20 @@
       {{ product.product_number }}
       {{ product.price }}
     {% endfor %}
-        <div class="field">
+    <form>
+      Add a Product:
 
-          <button class="btn btn-primary" type="submit">Update job</button>
+      <!-- TOOOOOOOOOOOOOOOOOO DOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO -->
+      <!-- DROPDOWN LIST OF PRODUCTS -->
+    </form>
+        <div class="field">
+          <form action="/job_update_process" method="POST">
+            <!-- MAKE RADIO BUTTONS: Status Update -new - quoted -invoice sent...-->
+
+          <button class="btn btn-primary" type="submit" value='/job_update_process'>Update job</button>
           <!-- Leslie I may need to tie this to a separate delete_form -->
+
+        </form>
         </div>
          
       </div>

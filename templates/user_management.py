@@ -1,13 +1,10 @@
 @app.route('/dashboard')
 def dashboard():
     admin_logged_in = {% if "user_id" in session and 1 in session["role_ids"] %}
-
-    #to do....specify what roles estimator and other permissions 1,2,3 will see on dashboard...
-    staff_logged_in = {% if "user_id" in session and 2 in session["role_ids"]%}
+    staff_logged_in = {% if "user_id" in session and 2 in session["role_ids"] %}
+    customer_logged_in = {% if "user_id" in session and 3 in session["role-ids"] %}
     login_form = request.form.get('login_form')
 
-    #need to check before adding to server.py if this will set session correctly
-    #ask Leslie if this way or the one below will work better with user_roles we set up
     user = users.get_current_user()
         if user:
             if Customer.get_by_email(user.email()):

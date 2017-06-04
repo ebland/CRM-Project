@@ -3,13 +3,14 @@
 
 <h2>All Users</h2>
 <ul>
-  {% for user in users %}
-  <li>{{ user.email|e }}</li>
-    <li>
-      <a href="/show_user/{{ user.user_id }}">
-        {{ user.email}} {{user.user_id}}
-      </a>
-     </li>
+
+    {% for user in users %}
+        <li>
+          <a href="/show_user/{{ user.user_id }}">
+            {{ user.email}} {{user.user_id}}
+          </a>
+         </li>
     {% endfor %} 
+
   </ul>
 {% endblock %}

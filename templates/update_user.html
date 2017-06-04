@@ -1,57 +1,71 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  {% if current_user %}
+ 
   <ul class="breadcrumb">
     <li><a href="/update_user">Update User</a> <span class="divider">/</span></li>
     <li class="active">User Information</li>
   </ul>
 
+<script>
+  function submitForm(){
+    document.getElementById("update_user").submit();
+  }
+</script>
+
   <div class="form-group">
     <div id="update_user">
-        <form action="/update_user" method="POST">
-          <div class="header">Instructions: Update all information then select "Update User" button to submit.</div>  
-          <div class="fields">
-            First Name<br>
-            <input type="text" name="fname" {{ % fname % }} required><br>
-            Last Name<br>
-            <input type="text" name="lname"  {{ % lname % }} required><br>
-            Job Title<br>
-            <input type="text" name="job_title" {{ % job_title % }><br> 
-            Department
-            <input type="text" name="department" {{ % department % }><br> 
-            Birthday<br>
-            <input type="text" name="birthdate" {{ % birthdate % }><br>  
-            Phone Number<br>
-            <input type="text" name="phone_number" {{ % phone % }><br> 
-            Secondary Phone Number<br>
-            <input type="text" name="phone_number_2" {{ % phone2 % }><br>  
-            Company<br>
-            <input type="text" name="company" {{ % company % }><br>  
-            Address<br>
-            <input type="text" name="address1" {{ % address1 % }><br>  
-            Apt/Ste/Lot/Rm Number<br>
-            <input type="text" name="address2" {{ % address2 % }><br>  
-            City<br>
-            <input type="text" name="city" {{ % city % }><br>  
-            State<br>
-            <input type="text" name="state" {{ % state % }><br>  
-            Zip Code<br>
-            <input type="text" name="zipcode" {{ % zip_code % }><br>  
-            
-            {{ % status % }}
-            {{ % created_at % }} 
-            <!--TS with datetime now function to show date if user has been modified-->
-            {{ % modified % }}
-            </div>
+
+        <form id="update_user" action="/update_user_process" method="POST">
+            <div class="form-group">
+              <div id="update_user">
+                  
+                    <div class="header">Instructions: Update all information then select "Update User" button to submit.</div>  
+                    <div class="fields">
+                      <label>First Name</label><br>
+                      <input type="hidden" name="user_id" value="{{user.user_id}}"  >
+                      <input type="text" name="fname" value='{{ user.fname }}' required><br>
+                      <label>Last Name</label><br>
+                      <input type="text" name="lname" value='{{ user.lname }}' required><br>
+                       <label>Email</label>
+                      <input type="text" name="email"  value="{{  user.email  }}" required><br>
+                       <label>Password</label>
+                      <input type="password" name="password"  value="{{  user.password  }}" required><br>
+                      <label>Job Title</label><br>
+                      <input type="text" name="job_title" value='{{ user.job_title }}'><br> 
+                      <label>Department</label>
+                      <input type="text" name="department" value='{{ user.department }}'<br> 
+                      <label>Birthday</label><br>
+                      <input type="text" name="birthdate" value='{{ user.birthdate }}'><br>  
+                      <label>Phone Number</label><br>
+                      <input type="text" name="phone_number" value='{{ user.phone }}'><br> 
+                      <label>Secondary Phone Number</label><br>
+                      <input type="text" name="phone_number_2" value='{{ user.phone2 }}'><br>
+                      <label>Company</label><br>
+                      <input type="text" name="company" value='{{ user.company }}'><br>  
+                      <label>Address</label><br>
+                      <input type="text" name="address1" value='{{ user.address1 }}'><br>  
+                      <label>Apt/Ste/Lot/Rm Number</label><br>
+                      <input type="text" name="address2" value='{{ user.address2 }}'><br>  
+                      <label>City</label><br>
+                      <input type="text" name="city" value='{{ user.city }}'><br>  
+                      <label>State</label><br>
+                      <input type="text" name="state" value='{{ user.state }}'><br>  
+                      <label>Zip Code</label><br>
+                      <input type="text" name="zipcode" value='{{ user.zip_code }}'><br>  
+                      {{  user.status  }}
+                      {{  user.created_at   }}
+                      {{  user.modified   }}
+                      </div>
+                
+                       
+                     <div class="field">
+                        <button class="button normal" value="submitForm" type="submit">Update User</button>
+                     </div>
+
+              </div>
         </form>
-
-        <div class="field">
-          <button class="button normal" type="submit">Update User</button>
-        </div>
       </div>
-    </form>
-
   </div>
 
 {% endblock %}

@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
   
-  <h1>Invoices <a href="" class='btn btn-mini btn-primary'>New invoice</a></h1>
+  <h1>Invoices <a href="/create_new_invoice" class='btn btn-mini btn-primary'>New invoice</a></h1>
 
   {% if invoices|length == 0 %}
     
-    <p class="first-create">You haven't created any invoices yet. <a href="{{ url_for('.create_invoice') }}">Get started</a></p>
+    <p class="first-create">You haven't created any invoices yet. <a href="{{ url_for('.create_new_invoice') }}">Get started</a></p>
     
   {% else %}
     <div class="workspace-inner">
