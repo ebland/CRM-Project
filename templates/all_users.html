@@ -3,7 +3,6 @@
   
 <h2>All Users</h2>
 <ul>
-
     {% for user in users %}
         <li>
           <a href="/show_user/{{ user.user_id }}">
@@ -18,7 +17,21 @@
     <h4 class="page-header">Manage users </h4>
 </div>
 
+
+<h2>User Management</h2>
+  <div page-header>
+    <h4 class="page-header">Manage Jobs </h4>
+  </div>
+
 {% if users|length == 0 %}
+
+{% else %}
+
+<div class="field">
+    <a href='/job_form'><button class="btn btn-primary" type="button">Create New Job</button></a>
+</div>
+
+{% endif %}
 
 
 {% else %}

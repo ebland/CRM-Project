@@ -5,155 +5,22 @@
   <div page-header>
     <h4 class="page-header">Manage products </h4>
 </div>
-  // <script> 
-
-  //   //table 1
-      
-  //     $("#tab_1_add").on('click', function(){
-  //       table_action("tab_1", 1);
-  //     }
-  //     )
-      
-  //     $("#tab_1_a1").on('click', function(){
-  //       table_action("tab_1", 2);
-  //     }
-  //     )
-      
-  //     $("#tab_1_a2").on('click', function(){
-  //       table_action("tab_1", 3);
-  //     }
-  //     )
-
-  // //local
-  //     table_init(
-          
-  //         "tab_1", 
-  //         "muffin table-bordered table-hover margin-bottom0", 
-  //         ["", "Id", "product_id", "product_name", "product_number", "description", "Price", ""], 
-  //         [,,,,,owncompare,,], 
-  //         [null,0,10], 
-  //         [
-  //          "", 
-  //          "", 
-  //          "<data> item", 
-  //          "", 
-  //          table_encode,
-  //          "$<data>",
-  //          label_muffin,
-  //          "<a href=\"javascript:table_open('<table>', <row>)\" class=\"btn btn-mini pull-right\">Open</span>"
-  //         ], 
-  //         true,
-  //         [],
-  //         table_getData
-          
-  //     );  
-      
-  //   //data = getData();
-  //   //table_set("tab_1", data);         
-  //     //table_update("tab_1");  //auto load from table_getData
-  //     table_sort("tab_1", 1, true);
-      
-      
-  //     //table 2
-      
-  //     $("#tab_2_add").on('click', function(){
-  //       table_action("tab_2", 1);
-  //     }
-  //     )
-      
-  //     $("#tab_2_a1").on('click', function(){
-  //       table_action("tab_2", 2);
-  //     }
-  //     )
-      
-  //     table_init(
-          
-  //         "tab_2", 
-  //         "muffin table-striped table-hover margin-bottom0", 
-  //         [
-  //           "", 
-  //           "{{ product_id }}", 
-  //           "{{ product_name  }}", 
-  //           "{{ product_number }}", 
-  //           "{{ description }}", 
-  //           "{{ price }}", 
-  //           ""
-  //         ], 
-  //         null, 
-  //         [null,0,10], 
-  //         [
-  //          "", 
-  //          "", 
-  //          "", 
-  //          "",
-  //          "",
-  //          "", 
-  //          table_encode,
-  //          "$<data>",
-  //          label_muffin,
-  //          "<a href=\"javascript:table_open('<table>', <row>)\" class=\"btn btn-mini pull-right\">Open</span>"
-  //         ], 
-  //         true,
-  //         [40],
-  //         table_getData
-          
-  //         );
-    
-    
-  //     table_update("tab_2");
-      
-          
-          
-      
-  // }
-
-  // </script>
 
   {% if products|length == 0 %}
-Invoices New product
-
-<div class="field">
-
-          <a href='/product_form'><button class="btn btn-primary" type="button">Create New product</button></a>
-         
-        </div>
-
-Invoices New product
 
 {% else %}
 
 <div class="field">
-          <a href='/product_form'><button class="btn btn-primary" type="button">Create New product</button></a>
-        </div>
-<ul>
-<div class="container" ng-app="tabApp">
-  <div class="row" ng-controller="TabController">
-    <div class="col-md-4">
-      <ul class="nav nav-pills nav-stacked">
-        <li ng-class="{ active: isSet(1) }">
-            <a href ng-click="setTab(1)">Home</a>
-        </li>
-        <li ng-class="{ active: isSet(2) }">
-            <a href ng-click="setTab(2)">Profile</a>
-        </li>
-        <li ng-class="{ active: isSet(3) }">
-            <a href ng-click="setTab(3)">All products</a>
-        </li>
-      </ul>
-    </div>
-  
+  <a href='/product_form'><button class="btn btn-primary" type="button">Create New product</button></a>
+</div>
+
 {% endif %}
 
 {% if products|length == 0 %}
 
-<h1>Invoices <a href="/create_product_form" class='btn btn-mini btn-primary'>New product</a></h1>
-
-
 {% else %}
-<h1>Invoices <a href="/product_form" class='btn btn-mini btn-primary'>New product</a></h1>
 
-
-<!--  product_id |      product_name       | product_number |           description            | product_type  | price | image_url | created_at | modified | module_abbreviation  -->
+{{ super() }}
 
 <div class="tab_1">
     <table class="muffin table-striped table-hover margin-bottom0">
@@ -174,7 +41,7 @@ Invoices New product
             <td class="col ref">{{ product.product_number }}</td>
             <td class="col name"> {{ product.description }}   <br></td>
             <td class="col total">{{ product.price }}</br></td>
-           <td class="col status">
+            <td class="col status">
 
              <form action="/product_update_process" method='POST'>
               <input type="radio" name="status" value="active">Active<br>
@@ -198,143 +65,5 @@ Invoices New product
 </div>
 {% endif %}
  
- 
+
 {% endblock %}
-  </ul>
-<div class="page-header"></div>
-  
-  <div class="row-fluid">
-    
-    <div class="span6">
-      
-    <table class="table muffin table-hover table-striped margin-bottom0 table-condensed">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Info</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-    <tr><td class="col due">{{ product.product_id }} </td><tdclass="col ref">{{ product.product_number }}</td><td>{{ product.description }}</td></tr>
-    <tr><td>{{ product.price }}</td><td>inside</td><td></td></tr>
-    <tr><td>30</td><td>a grid.</td><td></td></tr>
-    </tbody>
-    </table>  
-
-    </div>
-    
-   <div class="page-header">Example: Normal table with Result part</div>
-   
-   <!-- row -->
-   <div class="row-fluid">
-   <div class="span12">  
-   
-    <!-- table full -->
-    <div class="table-head muffin">   
-    
-      <div id="box_tsea1_content" class="collapse">
-      <div class="table-search muffin">     
-      <select class="minih input-medium">
-            <option>Today</option>
-            <option>Last month</option>
-            <option>All</option>
-      </select>     
-      </div>
-      </div>
-        
-      <div class="table-search-opt">
-      <a class="pull-left" href="/product_form" data-toggle="collapse" data-target="#box_tsea1_content"><i id="box_tsea1_expand" class="icon-plus-sign"></i></a>
-      <div style="text-align:right">
-      <form class="form-search form-nomargin">
-      <i id="tab_1_srem" class="icon-remove-circle tra icon-rpos"></i><input id="tab_1_svalue" class="search-query r6 minih" type="text"><button id="tab_1_search" type="button" class="btn btn-mini margin-left">Search</button>
-      </form>
-      </div>
-      </div>    
-    
-    </div>
-        
-    <div id="tab_1"></div>
-    
-    <div class="table-foot muffin"> 
-      
-      <div class="pull-left">
-      <div class="btn-group">
-        <button id="tab_1_unselect" class="btn btn-mini" type="button"><i class="icon-remove-circle"></i></button>
-        <button id="tab_1_selectall" class="btn btn-mini" type="button">All</button>
-      </div>
-      
-      <div class="btn-group">
-        <button id="tab_1_add" class="btn btn-mini" type="button">Add</button>
-      </div>
-      
-      <div class="btn-group">
-        <button id="tab_1_a1" class="btn btn-mini" type="button">In progress</button>
-        <button id="tab_1_a2" class="btn btn-mini" type="button">Freeze</button>
-      </div>      
-      </div>
-      
-      <div style="text-align:right">
-        <select id="tab_1_rowsn" data-table-rowsn="yes" class="minih r6 margin-right tab_1_navi">
-        <option value="10">10</option>
-        <option value="50">50</option>
-        <option value="1">1</option>
-        </select>
-        <span id="tab_1_navi" class="btn-group"></span>
-      </div>
-    
-    </div>
-    
-    <div class="table-results"> 
-
-    <div class="ibox-hero padding-10">
-    <table class="table margin-bottom0">
-      <tbody>
-    <tr class="lighter"><td>Sum</td><td>$114</td></tr>
-    <tr class="lighter"><td>Max</td><td>$90</td></tr>
-    </tbody>
-    </table>
-    </div>
-  
-    </div>
-    
-    <!-- end: table full -->  
-
-   </div>
-   </div>
-   <!-- row end -->
-   
-   
-   <div class="page-header">Example: Big table</div>
-   
-   <!-- row -->
-   <div class="row-fluid">
-   <div class="span12">  
-    
-    <!-- table full -->   
-    <div class="table-head muffin">   
-    
-      <div id="box_tsea2_content" class="collapse in">
-      <div class="table-search muffin">     
-      <select class="minih input-medium">
-            <option>Today</option>
-            <option>Last month</option>
-            <option>All</option>
-      </select>     
-      </div>
-      </div>
-        
-      <div class="table-search-opt">
-      <a class="pull-left" href="#self" data-toggle="collapse" data-target="#box_tsea2_content"><i id="box_tsea2_expand" class="icon-minus-sign"></i></a>
-      <div style="text-align:right">
-      <form class="form-search form-nomargin">
-      <i id="tab_2_srem" class="icon-remove-circle tra icon-rpos"></i><input id="tab_2_svalue" class="search-query r6 minih" type="text"><button id="tab_2_search" type="button" class="btn btn-mini margin-left">Search</button>
-      </form>
-      </div>
-      </div>    
-    
-    </div>
-
-
-
- 
