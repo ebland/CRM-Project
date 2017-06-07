@@ -10,17 +10,16 @@
 
   <div class="workspace-inner">
 
-    <form class="create_invoice" method="['POST']" action='/create_new_invoice'>
+    <form class="create_invoice_process" method="['POST']" action='/create_invoice_process'>
       <div class="header">New invoice</div>  
       <div class="fields">Name
         <input type="text" name="name" value="job_id" required>Job ID:<br> 
         <input type="text" name="description" required><br>
-        {{ form.invoice.datetime }} 
+        {{ invoice.datetime }} 
         <input type="text" name="phone" value='phone' required><br>
         <input type="text" name="location_address1" value="location_address1" required><br>
     <input type="text" name="location_address2" value="location_address2" required><br>
     <input type="text" name="location_city" value="city" required><br>
-    <input type="text" name="location_state" value="state" required><br>
         <div class="field">
           <button class="button normal" type="submit">Continue</button>
         </div>
@@ -29,34 +28,34 @@
 
   </div>
 
-  <script type="text/javascript">
-    var dueDateField = $('.field-due_date_nice');
-    var dueDatePicker = null;
-    var dateFormat = 'D MMM YYYY'
-    $(document).ready(function(){
-      var picker1 = new Pikaday({ field: document.getElementById('date_issued_nice'), format: dateFormat });
-      setup();
-    });
-    function setup() {
-      if ($('#payment_term_id').val() == 6) {
-        dueDateField.show();
-        dueDatePicker = new Pikaday({ field: document.getElementById('due_date_nice'), format: dateFormat });
-      } else {
-        dueDatePicker = null;
-        dueDateField.hide();
-      }
-      $('#payment_term_id').on('change', function(evt){
-          var v = $(this).val();
-          if (v == 6) {
-            dueDateField.show();
-            dueDatePicker = new Pikaday({ field: document.getElementById('due_date_nice'), format: dateFormat });
-          } else {
-            dueDatePicker = null;
-            dueDateField.hide();
-          }
-      });
-    }
-  </script>
+  // <script type="text/javascript">
+  //   var dueDateField = $('.field-due_date_nice');
+  //   var dueDatePicker = null;
+  //   var dateFormat = 'D MMM YYYY'
+  //   $(document).ready(function(){
+  //     var picker1 = new Pikaday({ field: document.getElementById('date_issued_nice'), format: dateFormat });
+  //     setup();
+  //   });
+  //   function setup() {
+  //     if ($('#payment_term_id').val() == 6) {
+  //       dueDateField.show();
+  //       dueDatePicker = new Pikaday({ field: document.getElementById('due_date_nice'), format: dateFormat });
+  //     } else {
+  //       dueDatePicker = null;
+  //       dueDateField.hide();
+  //     }
+  //     $('#payment_term_id').on('change', function(evt){
+  //         var v = $(this).val();
+  //         if (v == 6) {
+  //           dueDateField.show();
+  //           dueDatePicker = new Pikaday({ field: document.getElementById('due_date_nice'), format: dateFormat });
+  //         } else {
+  //           dueDatePicker = null;
+  //           dueDateField.hide();
+  //         }
+  //     });
+  //   }
+  // </script>
 
 
 {% endblock %}

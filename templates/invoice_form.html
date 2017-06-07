@@ -1,3 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% block content_header %}
+  {% include "content_header.html" %} 
+  {% endblock content_header %}
+  
 <fieldset>
     <legend>Invoice Details</legend>
     <ol>
@@ -22,20 +28,18 @@
             </select>
         </li>
         <li>
-            <label for="currency">Currency</label>
-            <select name="currency">
-                <option value="EUR"{% if invoice and invoice.currency == "EUR" %}selected="selected"{% endif %}>EUR</option>
-                <option value="USD"{% if invoice and invoice.currency == "USD" %}selected="selected"{% endif %}>USD</option>
+            <label for="product">Products</label>
+            <select name="product">
             </select>
         </li>
         <li>
-         <!--    <label for="status">Status</label>
+            <label for="status">Status</label>
             <select name="status">
                 <option value="Draft"{% if invoice and invoice.status == "Draft" %}selected="selected"{% endif %}>Draft</option>
                 <option value="Sent"{% if invoice and invoice.status == "Sent" %}selected="selected"{% endif %}>Sent</option>
                 <option value="Overdue"{% if invoice and invoice.status == "Overdue" %}selected="selected"{% endif %}>Overdue</option>
                 <option value="Paid"{% if invoice and invoice.status == "Paid" %}selected="selected"{% endif %}>Paid</option>
-            </select> -->
+            </select>
         </li>
     </ol>
 </fieldset>
@@ -47,3 +51,5 @@
     <legend>Internal Notes</legend>
     <textarea name="internal_notes" rows="10" cols="40">{{% if invoice %}{{ invoice.description }}{% endif %}</textarea>
 </fieldset>
+
+{% endblock %}

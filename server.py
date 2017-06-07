@@ -37,7 +37,6 @@ def search_process():
      # 1. set email and password from form 
     fname = request.form.get('fname')
     lname = request.form.get('lname')
-    #return fname
 
     try:
         customer = User.query.filter_by(fname=fname).first()
@@ -119,10 +118,12 @@ def logout():
     else:
         return render_template('homepage.html')
 
+
 @app.route('/delete_user')
 def delete_user():
     """Deletes a user"""
     return render_template('delete_user_form.html')
+
 
 @app.route('/show_user/<int:user_id>')
 def show_user(user_id):
@@ -178,7 +179,7 @@ def new_user():
         city = request.form.get('city')
         state = request.form.get('state')
   
-        user = User(fname=fname, lname=lname, zip_code=zip_code, email=email, created_at=created_date, password=password, phone=phone, phone2=phone2, address1=address1, address2=address2, city=city, state=state)
+        user = User(fname=fname, lname=lname, zip_code=zip_code, email=email, created_date=created_date, password=password, phone=phone, phone2=phone2, address1=address1, address2=address2, city=city, state=state)
 
         db.session.add(user)
    
@@ -513,11 +514,10 @@ def invoice_detail(job_id):
 
 
 @app.route('/all_invoices')
-def invoice_list():
+def all_invoices():
     """Show List of All Invoices in ECRM."""
-    return "1"
 
-    job = job.query.filter_by(status='invoice_sent').all()
+    invoices = Invoice.query.all()
 
     return render_template("all_invoices.html", invoices=invoices)
 
@@ -526,9 +526,9 @@ def invoice_list():
 def invoice_form():
     """Invoice form for new entries in ECRM."""
 
-    invoices = Invoice.query.all() 
+    invoice = Invoice.query.all() 
 
-    return render_template("invoice_form.html", invoices=invoices)
+    return render_template("invoice_form.html", invoice=invoice)
 
  
 @app.route('/process_add_customer', methods=["GET", "POST"])
@@ -650,11 +650,11 @@ def new_invoice():
     page = 'create_new_invoice'
 
  #TO DO:// LINK ALL TOGETHER
-@app.route('/create_invoice_form')
+@app.route('/create_invoice')
 def create_invoice_form():
 
     page = 'create_invoice'
-    return render_template('create_new_invoice.html', page=page)
+    return render_template('create_invoice.html', page=page)
 
     name = request.form.get('name')
     description = request.form.get('description')

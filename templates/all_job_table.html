@@ -1,22 +1,15 @@
 {% extends "base.html" %}
-
-
-<!-- Content -->
 {% block content_header %}
-{% include "content_header.html" %} <!-- Content: Header -->
+{% include "content_header.html" %} 
 {% endblock content_header %}
-
-
 {% block content %}
 <div page-header>
     <h4 class="page-header">Manage Jobs </h4>
 </div>
 
-
-
 {% if jobs|length == 0 %}
 
-<h1>Invoices <a href="/create_job_form" class='btn btn-mini btn-primary'>New Job</a></h1>
+<h1>JOBS <a href="/create_job_form" class='btn btn-mini btn-primary'>Create New Job</a></h1>
 
 
 {% else %}

@@ -5,25 +5,41 @@
     {% block metas %}
       <meta charset="UTF-8">
       <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
     {% endblock metas %}
 
-    {% block styles %}
+  {% block styles %}
 
     {% block stylesheet %}
-    <link href="{{ url_for('static', filename='css/ecrm.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/bootstrap.css') }}"rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" rel="stylesheet" type="text/css" />
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet"href="{{ url_for('static', filename='css/AdminLTE.css') }}">
+    <link rel="stylesheet"href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet"href="{{ url_for('static', filename='css/application/style/muffin-table.css') }}">
+    <!-- <link rel="stylesheet"href="{{ url_for('static', filename='css/ecrm.css', cdn='local') }}"> -->
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cyborg/bootstrap.min.css">
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/AdminLTE.min.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/skins/_all-skins.min.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/style.css") }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/dataTables.bootstrap.css") }}">
     {% endblock stylesheet%}
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    {% block scripts %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lib_boxes.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lib_tables.js') }}"></script> 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/lib_live.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='ajs/lib_main.js') }}"></script>
+    <script src="{{ url_for('static', filename="js/app.js") }}"></script>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-    {% endblock styles %}
-  {% endblock head %}
+    {% endblock %}
+
+  {% endblock %}
+{% endblock head %}
 </head>
 
- <body{% block body_attribs %} class="skin-blue" {% endblock body_attribs %}>
+<body{% block body_attribs %} class="skin-blue" {% endblock body_attribs %}>
   {% block body %}
 
     {%  block header %}

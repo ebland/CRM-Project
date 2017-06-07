@@ -57,10 +57,13 @@
                       {{  user.created_at   }}
                       {{  user.modified   }}
                       </div>
-                
+                  <td class="col total"><h1> 
+              <a href="/users/{{ user.user_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
+            <td class="col total"><h1> <a href="/user_delete/{{user.user_id }}" class='btn btn-mini btn-primary'>Delete</a></h1></br></td>
                        
                      <div class="field">
                         <button class="button normal" value="submitForm" type="submit">Update User</button>
+                         <td class="col total"><h1> <a href="/user_delete/{{user.user_id }}" class='btn btn-mini btn-primary'>Delete</a>
                      </div>
 
               </div>

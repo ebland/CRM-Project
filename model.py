@@ -61,15 +61,7 @@ class User(db.Model):
     ###### STATUS #######
     created_at = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
-    ###### FOREIGN KEYS #######
-
-    ###    TOOOOOOOO  DOOOOOOOOOOO -figure out why mapper will not process FK
-    # customer_id = db.Column(db.Integer, db.ForeignKey('customers.id'))
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # staff_id = db.Column(db.Integer, db.ForeignKey('staff.id'))
-    # job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
-    # invoice_id = db.Column(db.Integer, db.ForeignKey('invoice.id'))
- 
+    
     roles = db.relationship('Role_ID', secondary='user_roles',
                             backref=db.backref('users', lazy='dynamic'))
    
@@ -108,14 +100,6 @@ class Job(db.Model):
     customer_id = db.Column(db.Integer(), db.ForeignKey('users.user_id'))
     total = db.Column(db.Float(precision=10, decimal_return_scale=2, asdecimal=True))
 
-    # quote_id = db.Column(db.Integer(11), db.ForeignKey('quotes.quote_id'))
-    # total_net_amount = db.Column(db.Integer(5), db.ForeignKey(total_net_amount.c_total_net_amount(10,2)))
-    # staff_total_amount = db.Column(db.Integer(5), db.ForeignKey(staff_total_amount.c_staff_total_amount(10,2)))
-    
-    #Leslie, I want these to be updated with information about job adds and edits to update it underneath the user
-    # update_user_id = db.Column(db.Integer(11), nullable=True)
-    # create_user_id = db.Column(db.Integer(11), nullable=False)
-
     ######STATUS#######
     active = db.Column(db.Boolean())
     status = db.Column(db.String(20))
@@ -130,7 +114,6 @@ class Job(db.Model):
     customer = db.relationship('User', backref=db.backref('customer_jobs'), foreign_keys=[customer_id])
 
     
-
 class Job_Product(db.Model):
 
     __tablename__="job_product"
@@ -140,10 +123,17 @@ class Job_Product(db.Model):
                       autoincrement=True)
     product_id = db.Column(db.Integer(), db.ForeignKey('product.product_id', ondelete='CASCADE'))
     job_id = db.Column(db.Integer(), db.ForeignKey('jobs.job_id', ondelete='CASCADE'))
-    #quantity = db.Column(db.Integer(), nullable=True)
-# ----------------------
 
+class Invoice_Product(db.Model):
 
+    __tablename__="invoice_product"
+
+    ipid = db.Column(db.Integer, 
+                      primary_key=True,
+                      autoincrement=True)
+    product_id = db.Column(db.Integer(), db.ForeignKey('product.product_id', ondelete='CASCADE'))
+    invoice_id = db.Column(db.Integer(), db.ForeignKey('invoice.invoice_id', ondelete='CASCADE'))   
+# ---------------------
 def seed_data():
 
     role_1=Role_ID(name='admin', description='master')
@@ -203,13 +193,23 @@ def seed_data():
 
     db.session.add_all([job_product1, job_product2, job_product3, job_product4, job_product5, job_product6])
     db.session.commit()
-    
-        
+
+    invoice1 = Invoice(invoice_number='23456789',invoice_created_date='2/4/17', invoice_due_date='2/28/17', modified='2/2/17', received_date='2/7/17', description='Invoice description here') 
+    invoice2 = Invoice(invoice_number='98765432',invoice_created_date='8/12/17', invoice_due_date='8/28/17', modified='8/12/17', received_date='8/7/17', description='Invoice description here') 
+    invoice3 = Invoice(invoice_number='55555555',invoice_created_date='10/4/17', invoice_due_date='10/28/17', modified='10/4/17', received_date='10/1/17', description='Invoice description here') 
+    invoice4 = Invoice(invoice_number='23232329',invoice_created_date='3/24/17', invoice_due_date='3/28/17', modified='3/24/17', received_date='3/7/17', description='Invoice description here') 
+    invoice5 = Invoice(invoice_number='28282828',invoice_created_date='7/14/17', invoice_due_date='7/28/17', modified='7/14/17', received_date='7/7/17', description='Invoice description here') 
+    invoice6 = Invoice(invoice_number='37373737',invoice_created_date='6/3/17', invoice_due_date='6/28/17', modified='6/3/17', received_date='6/1/17', description='Invoice description here') 
+
+    db.session.add_all([invoice1, invoice2, invoice3, invoice4, invoice5, invoice6])
+    db.session.commit()
+
 def connect_to_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///ecrm'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
+
 
 class Invoice(db.Model):
 
@@ -218,33 +218,31 @@ class Invoice(db.Model):
     invoice_id = db.Column(db.Integer,
                       primary_key=True,
                       autoincrement=True)
-    customer_id = db.Column(db.ForeignKey(u'customer.customer_id'), nullable=False, index=True)
-    invoice_number = db.Column(db.Unicode(50), unique=True)
+    invoice_number = db.Column(db.String(11))
     invoice_created_date = db.Column(db.DateTime(timezone=True), default=db.func.now())
     invoice_due_date = db.Column(db.DateTime(timezone=True), default=db.func.now())
     modified = db.Column(db.DateTime())
     received_date = db.Column(db.DateTime())
     description = db.Column(db.String(100))
-    user_id = db.Column(db.Integer, db.ForeignKey(u'users.user_id'), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), index=True)
    
     # product = db.relationship('Invoice_Detail', back_populates="invoice")
-    customers = db.relationship('Customer', backref=db.backref('invoice'))
+    # customers = db.relationship('Customer', backref=db.backref('invoice'))
 
 
 class Invoice_Detail(db.Model):
 
     __tablename__ ="invoice_detail"
 
-    invoice_detail_id = db.Column(db.Integer, primary_key=True, unique=True)
+    invoice_detail_id = db.Column(db.Integer, primary_key=True)
 
-    invoice_number = db.Column(db.Unicode(50), db.ForeignKey('invoice.invoice_number'))
-    product_number = db.Column(db.Unicode(50), db.ForeignKey('product.product_number'))
-    purchase_order_number = db.Column(db.Unicode(50))
+    # invoice_number = db.Column(db.Integer(), db.ForeignKey('invoice.invoice_number'))
+    # product_number = db.Column(db.Integer(), db.ForeignKey('product.product_number'))
     created_at = db.Column(db.DateTime())
     modified = db.Column(db.DateTime())
 
-    invoice = db.relationship('invoice', back_populates='products')
-    product = db.relationship('product', back_populates='invoices')
+    # invoice = db.relationship('invoice', back_populates='products')
+    # product = db.relationship('product', back_populates='invoices')
 
 
 
