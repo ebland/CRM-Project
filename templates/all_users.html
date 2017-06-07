@@ -2,39 +2,43 @@
 {% block content %}
   
 <h2>All Users</h2>
-<ul>
-    {% for user in users %}
+<div page-header>
+    <h4 class="page-header">User Management </h4>
+</div>
+
+   {% if products|length == 0 %}
+
+     {% for user in users %}
         <li>
           <a href="/show_user/{{ user.user_id }}">
             {{ user.email}} {{user.user_id}}
           </a>
-         </li>
-    {% endfor %} 
- <a href='/create_new_user'><button class="btn btn-primary" type="button">Create New User</button></a>   
-  </ul>
+        </li>
+      {% endfor %} 
 
-<div page-header>
-    <h4 class="page-header">Manage users </h4>
-</div>
-
-
-<h2>User Management</h2>
-  <div page-header>
-    <h4 class="page-header">Manage Jobs </h4>
-  </div>
-
-{% if users|length == 0 %}
-
-{% else %}
-
-<div class="field">
-    <a href='/job_form'><button class="btn btn-primary" type="button">Create New Job</button></a>
+<div>   
+    <a href='/create_new_user'><button class="btn btn-primary" type="button">Create New User</button></a>   
 </div>
 
 {% endif %}
 
+{% if products|length == 0 %}
 
-{% else %}
+{% endif %}
+
+{{ super() }}
+
+  <div page-header>
+    <h4 class="page-header">Administration</h4>
+  </div>
+
+{% if users|length == 0 %}
+
+    <div class="field">
+        <a href='/job_form'><button class="btn btn-primary" type="button">Create New Job</button></a>
+    </div>
+
+{% endif %}
 
 <div class="workspace-inner">
     <table class="table data-list invoice-data-list">
@@ -48,23 +52,22 @@
         <td class="col total">Delete</td>
         </thead>
         <tbody>
-         {% for user in users %}
+        {% for user in users %}
         <tr class="clickable" data-id="{{ user.user_id }}">
             <td class="col due">{{ user.user_id }}</td>
             <td class="col due">{{ user.fname }}</td>
             <td class="col ref">{{ user.lname }}</td>
             <td class="col name">{{ user.phone}} {{ user.phone2 }} <br></td>
             <td class="col total">{{ user.address1 }}</br></td>
-            <td class="col total"><h1> <a href="/update_user_process/{{ user.user_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
-            <td class="col total"><h1> <a href="/user_delete/{{user.user_id }}" class='btn btn-mini btn-primary'>Delete</a></h1></br></td>
+            <td class="col status">
+     
+        <td class="col total"><h1>
+         <a href="/update_user_process/{{ user.user_id }}" class='btn btn-mini btn-primary'>Update</a></h1></br></td>
+        <td class="col total"><h1> <a href="/user_delete/{{user.user_id }}" class='btn btn-mini btn-primary'>Delete</a></h1></br></td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
-{% endif %}
-
-
-
 
 {% endblock %}
